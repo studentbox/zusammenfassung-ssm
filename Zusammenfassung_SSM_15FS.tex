@@ -1,0 +1,48 @@
+\documentclass[11pt,a4paper]{scrreprt}
+
+% Codierung
+\usepackage{selinput}
+\SelectInputMappings{
+  adieresis={ä},
+  germandbls={ß},
+}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+% Kopf-/Fusszeilen
+\usepackage{scrlayer-scrpage}
+\usepackage{lastpage}
+\setkomafont{pageheadfoot}{\small\sffamily}
+\pagestyle{scrheadings}
+\lohead*{}
+\cohead*{}
+\rohead*{}
+\lofoot*{SSM}
+\cofoot*{}
+\rofoot*{Seite \thepage \hspace{1pt} von \pageref{LastPage}}
+
+\usepackage{lipsum}
+
+% Bilder
+\usepackage{graphicx}
+
+% Hyperlinks
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+\titlehead{Hochschule Luzern \\ 
+	Technik \& Architektur}
+\subject{Zusammenfassung}
+\title{Service \& System Management}
+\subtitle{}
+\author{Fabian Wüthrich \\ 
+	Simon Erni \\ 
+	Alex Suter}
+\date{\today}
+
+\maketitle
+
+\tableofcontents
+
+\end{document}
