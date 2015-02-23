@@ -1,0 +1,86 @@
+\chapter{Data Center}
+\section{Sie kennen die Building Blocks eines Datacenters}
+\subsection{Fiber}
+\begin{itemize}
+	\item \textbf{Single-mode fiber}\\
+		Werden für lange Strecken eingesetzt (bis 100km Länge) und hohe Übertragungsraten (bis 100Gbit/s). Die Glasfaser selbst ist nur 8-10.5 mikrometer dick. Der Lichtimpuls wird durch einen Laser erzeugt. Teurer.
+	\item \textbf{Multimode fiber}\\
+	Für kurze Strecken eingsetzt (On Campus, bis 500m Länge) und niedrigere Übertragungsraten (10Gbit/s). Der Lichtimpuls wird durch eine LED erzeugt. Günstiger.
+\end{itemize}
+Single-mode fiber
+\subsection{Downtime}
+Downtime kostet, je nach Branche, extrem viel Geld. Das schlimmste wäre allerdings permanenter Datenverlust. Wenn nach einer Katastrophe wie 9/11 die Daten nicht innerhalb von 2 Wochen rekonstruiert sind, stirbt die Firma.
+\begin{table}[h]
+	\begin{tabular}{ll}
+		\textbf{Uptime (\%)} & \textbf{Downtime}        \\
+		90\%                 & 876 Stunden (36,5 Tage)  \\
+		95\%                 & 438 Stunden (18,25 Tage) \\
+		99\%                 & 87,6 Stunden (3,65 Tage) \\
+		99,9\%               & 8,76 Stunden             \\
+		99,99\%              & 52,56 Minuten            \\
+		99,999\%             & 5,256 Minuten            \\
+		99,9999\%            & 31,536 Sekunden         
+		\end{tabular}
+		\end{table}
+		99.9999\% sind von Firmen wie Google/Facebook/... erreicht.
+\section{Sie wissen wie man Daten klassifiziert und sie in SLAs einbindet}
+\subsection{Aktive vs. inaktive Daten}
+Daten sind inaktiv, wenn sie nicht benutzt / gelesen werden und trotzdem gespeichert werden. Diese müssen genau wie aktive Daten gepflegt, archiviert, gesichert etc. werden.
+Der Anteil an inaktiven Daten beträgt gegen 40\%. Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringert werden. Dabei werden Daten nach einer gewissen Zeit ohne Zugriff automatisch gelöscht. Da die Daten immer weiter wachsen, wächst auch der Anteil an inaktiven Daten mit.
+\subsection{Datenklassen}
+\begin{itemize}
+	\item \textbf{Mission Critical Data} \\
+	Muss schnell sein, hochverfügbar, usw.
+	\item \textbf{Business Critical Data} \\
+	Geschäftskritische Daten einer Applikation
+	\item \textbf{Nearline Data} \\
+	z.B. E-Mail
+	\item \textbf{Offline Data} \\
+	Daten auf welche nicht direkten Zugriff erwartet wird. z.B. E-Mail Archivierung für Compliance.
+\end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{fig/sla}
+	\caption{Beispiele für SLAs}
+	\label{fig:sla_beispiele}
+\end{figure}
+\section{Sie sind in der Lage Data-Tiers und deren Aufgaben zu erklären}
+\subsection{Tiers vs Layer}
+In der Softwareentwicklung sind Layers typischerweise logisch zu verstehen, beispielsweise hat man ein View-Layer, ein Business-Layer und ein Persistenz-Layer. Tiers dagegen sind das physische Äquivalent zu den logischen Layers. Dabei hat man z.B. eine Trennung von einem Webserver, eine, Applikationsserver und einem DB Server.
+\subsection{Storage Tiers}
+\begin{itemize}
+	\item \textbf{Tier 1} \\
+		Höchster Speed, sehr zuverlässig, hohe Skalierbarkeit, sehr teuer. Wird von Mission Critical Data benutzt.
+		20\% aller Daten
+	\item \textbf{Tier 2} \\
+		Mittlerer Speed, okay zuverlässig, limiert skalierbar, nicht so teuer. Wird von Business Critical Data verwendet.
+	\item \textbf{Tier n} \\
+		Hohe Kapazität, allerdings niedriger Speed, sehr günstig. Könnte als Nearline-Storage verwendet werden (d.h. E-Mail)
+		35\% aller Daten
+	\item \textbf{spezialisiert} \\
+		Offsite / Offline Tape Archivierung (15\% aller Daten) \\
+		Einmal Beschreibbare Medien (für Compliance)
+		(30\% aller Daten)
+\end{itemize}
+Tape Archivierung ist immer noch das billigste Archiv-Medium und der vielseitigste Archivierungs-Speicher den es gibt. Allerdings ist Archivierung nicht ein Backup!
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{fig/speichertypen}
+	\caption{Übersicht Speichertypen}
+	\label{fig:speichertypen}
+\end{figure}
+\subsection{Information Lifecycle Management (ILM)}
+Verschiebung der Daten von Tier 1 bis Tier n (oder zur Löschung), mit dem Ziel der Optimierung der Kosten in der IT. Verschiebung anhand Kriterien wie Kosten, Ökonomischer Wert, Speicherzeit, letzter Zugriff, Anforderung an Zugriffsgeschwindigkeit oder auch gesetzliche Bestimmungen.
+\section{sie sind fähig die kritischen Punkte eines Datacenters zu adressieren und Massnahmen vorzuschlagen}
+Wenn man die Qualität verbessern will, muss man auch die Verfügbarkeit erhöhen. Diese erhöht man nur durch Redundanz.
+\textbf{Beispiele für Redundanz}
+\begin{itemize}
+	\item SANs Redundant halten (inkl. der Pfade zu den SANs).
+	\item Asynchrone Replikation von Daten auf entfernte Speicher \\
+		Der Schreiber wartet nicht darauf, bis der entfernte Speicher ebenfalls beschrieben ist.
+	\item Failover Datacenter \\ 
+		Das gesamte Datacenter ist gespiegelt vorhanden. Schwierig zu realisieren, da alles doppelt vorhanden sein muss - entsprechend teuer.
+	\item Kombination zwischen Synchrone und Asynchrone Replizierung \\
+		Die primäre Datenbank schreibt alle Daten synchron auf eine kleine, lokale Zwischenstation. Diese Zwischenstation übernimmt anschliessend asynchron die Synchronisierung auf den entfernten Speicher.
+\end{itemize}
+Ein Echtzeit-Switch zwischen Aktiv- und Failoverdatacenter ist nie möglich, da durch die Übertragungszeit immer eine Latenz im Spiel ist und daher die entfernte Datenbank im Grunde genommen immer Inkonsistent ist.
