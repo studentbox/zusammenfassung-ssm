@@ -25,17 +25,19 @@ Downtime kostet, je nach Branche, extrem viel Geld. Das schlimmste wäre allerdi
 \section{Sie wissen wie man Daten klassifiziert und sie in SLAs einbindet}
 \subsection{Aktive vs. inaktive Daten}
 Daten sind inaktiv, wenn sie nicht benutzt / gelesen werden und trotzdem gespeichert werden. Diese müssen genau wie aktive Daten gepflegt, archiviert, gesichert etc. werden.
-Der Anteil an inaktiven Daten beträgt gegen 40\%. Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringert werden. Dabei werden Daten nach einer gewissen Zeit ohne Zugriff automatisch gelöscht. Da die Daten immer weiter wachsen, wächst auch der Anteil an inaktiven Daten mit.
+Der Anteil an inaktiven Daten beträgt gegen 40\%. Da die Daten immer weiter wachsen, wächst auch der Anteil an inaktiven Daten mit. Teilweise kann man sich von den inaktiven Daten nicht entledigen. Beispielsweise kann es rechtliche Gründe haben wie das bei einer Krankenversicherung der Fall ist. Das Gesetz schreibt genau vor, wie lang welche Daten gespeichert werden müssen.
+Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringert werden. Dabei könnte man definieren, dass Daten nach einer gewissen Zeit ohne Zugriff automatisch gelöscht. Aber Achtung: Dies passt nicht zur Philosophie von Big Data (möglichst alles speichern und für immer).
+
 \subsection{Datenklassen}\label{sec:datenklassen}
 \begin{itemize}
 	\item \textbf{Mission Critical Data} \\
-	Muss schnell sein, hochverfügbar, usw.
+	Muss schnell sein, hochverfügbar, redundant usw.
 	\item \textbf{Business Critical Data} \\
-	Geschäftskritische Daten einer Applikation
+	Geschäftskritische Daten einer Applikation (Geschäftsapplikation)
 	\item \textbf{Nearline Data} \\
 	z.B. E-Mail
 	\item \textbf{Offline Data} \\
-	Daten auf welche nicht direkten Zugriff erwartet wird. z.B. E-Mail Archivierung für Compliance.
+	Daten auf welche nicht direkten Zugriff erwartet wird. z.B. E-Mail Archivierung für Compliance. (u.a. Tape)
 \end{itemize}
 \begin{figure}
 	\centering
@@ -45,7 +47,7 @@ Der Anteil an inaktiven Daten beträgt gegen 40\%. Der Anteil an inaktiven Daten
 \end{figure}
 \section{Sie sind in der Lage Data-Tiers und deren Aufgaben zu erklären}
 \subsection{Tiers vs Layer}
-In der Softwareentwicklung sind Layers typischerweise logisch zu verstehen, beispielsweise hat man ein View-Layer, ein Business-Layer und ein Persistenz-Layer. Tiers dagegen sind das physische Äquivalent zu den logischen Layers. Dabei hat man z.B. eine Trennung von einem Webserver, eine, Applikationsserver und einem DB Server.
+In der Softwareentwicklung sind Layers typischerweise logisch zu verstehen, beispielsweise hat man ein View-Layer, ein Business-Layer und ein Persistenz-Layer. Tiers dagegen sind das physische Äquivalent zu den logischen Layers. Dabei hat man z.B. eine Trennung von einem Webserver, eine, Applikationsserver und einem DB Server (u.a. auch Aspekte wie Load-Balancing). Bei den Layers spricht von der Horizontalen Ansicht und den Tiers von der vertikalen.
 \subsection{Storage Tiers}\label{sec:storagetier}
 \begin{itemize}
 	\item \textbf{Tier 1}
