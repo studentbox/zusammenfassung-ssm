@@ -27,3 +27,69 @@ Komplexe Gleichungen lösen kann man sehr stark parallelisieren. Dies ist auch d
 Wird in Supercomputer verwendet zur Verbindung der einzelnen Nodes untereinander. Extrem schnell (bis 60Gbit/s). Gibt nur wenige Hersteller, daher sehr teuer.
 \section{SMP - Symmetrische Multiprozessoren}
 Ein Cluster ist lose gekoppelt, während Symmetrische Multiprozessoren sehr viele Dinge untereinander teilen. Es sind zwei oder mehr gleichartige Prozessoren (können verschiedene sein, müssen aber die gleichen Funktionen ausführen können).Sie teilen sich das gleiche Mainmemory und die I/O Devices. Sie sind über einen Bus zusammengeschaltet, oder direkt z.B. via QPI (Intel QuickPath Interconnect). Via Bus stellt ein Bottleneck dar.
+
+\section{Lernkontrolle}
+\subsection{Erklären Sie die superskalare Architektur}
+Der Prozessor legt mehrere Instruktionen auf unabhängige Funktionseinheiten.
+Hauptsächlich bei der Fetch-Einheit wird die superskalere Architektur aufgebläht.
+\subsection{Erklären Sie den Unterschied zwischen UMA und NUMA Memory Architekturen}
+UMA = Unified Memory Access, einheitliche Zugriffszeit, zentraler Speicher
+NUMA = Non unified Memory Access, nicht-einheitliche Zugriffszeit, verteilter Speicher
+\subsection{Zeichnen Sie eine gemischte UMA/NUMA Architektur auf wo Memory lokal, sowie verteilt zum Prozessor ist}
+Mehrere Prozessoren mit je einem eigenen Memory. Die Prozessoren sind untereinander verbunden mit QPI.
+zusätzliche Fragen, z.B. was ist das für ein Netzwerk, wie kann der Prozessor dann verteiltes Memory erreichen, ...
+\subsection{Was ist der Unterschied zwischen Multiprozessor und Multicomputer Systemen? Nennen Sie ein Beispiel}
+Aus wissenschaftlichem Standpunkt ähnlich, in Bezug auf Zugriffszeit auf das Memory.
+Bei Multiprozessorsystemen teilen sich die Prozessoren einen gemeinsamen Adressraum.
+Multicomputer haben lokalen Speicher mit separaten Adressraum und werden über ein Netz zusammengeschaltet, z.B. bei einem Grid.
+\subsection{Wie werden Chip oder Multicore Architekturen wie wir sie heute verwenden genannt?}
+Chip Level Multithreading
+Setzt sich zusammen aus ; CMP = Chip Multiprocessing, Simultanious Multithreading = SMP 
+Gibt zusammen das heutige Chip Level Mu
+Wir können also Softwarehthreads in der Hardware abbilden mit diesen Instruktionspipelines.
+\subsection{Welches ist das (heute) bevorzugte Verbindungsnetz (das eigentlich gar keines ist)?}
+Ist ein Crossbar Switch. Ist keines im geometrischen Sinne.
+\subsection{Was zeichnet es aus?}
+Wieso ist der Crossbar Switch so beliebt?
+Ein Point 2 Point Netz ist ein Deadend, kann man nicht weiterverfolgen, nicht skalierbar. Also muss man andere Wege gehen -> Crossbar Switch.
+Man kann über eine bestimmte Anzahl Kanten einen beliebigen Core erreichen.
+Man kann jeden Knoten erreichen mit maximal 2 Hops - klar sie haben einen Aufwand, aber man kann dadurch garantieren dass jeder Knoten schnell erreichbar ist.
+\subsection{Ist ein Crossbarswitch Netz blockierend?}
+Nein es ist nicht blockierend, da es immer eine Alternativverbindung gibt. Die Verbindung ist offen für einen anderen Knoten denselben zu erreichen.
+\subsection{Ist ein Omega Netzwerk blockierend?}
+Ja das Omega Netzwerk ist blockierend. Wenn von Punkt X zu Punkt Y eine Verbindung hergestellt ist, wenn von Punkt Z zu Punkt Y eine Verbindung hergestellt wird, wäre ein Knoten auf dem Weg im Moment blockiert.
+\subsection{Was ist der Hauptgrund wieso ein Multicore Chip mehrere Hardware Threads implementieren soll?}
+Wenn Memorystalls auftreten, kann der andere Thread rechnen.
+\subsection{Wie implementiert der Chiphersteller diese Hardware Threads?}
+Superskalara Architektur mit InstruktionPipelines
+\subsection{Wie werden SW Threads auf die verschiedenen Cores verteilt?}
+Das Betriebssystem / Der Scheduluer verteilt die SW Threads. Er verteilt CPU Time. Die kleinste Einheit, die ein Betriebssystem verteilen kann, sind Threads.
+\subsection{Welches Problem tritt bei Multicore Architekturen auf, das man bei Singlecore Architekturen mit einem L1 und L2 Cache nicht hatte?}
+Cachekoheränzprobleme. Daran arbeitet man zur Zeit sehr sehr fleissig.
+\subsection{Welche 2 Schreibstrategien gibt es bei Prozessorcaches?}
+Es gibt eine Menge von caches, nicht nur Prozessorcaches, z.B. gibt es auch den Memorycache (ist ein Cache vom Operating System, baut er sich selbst auf für MemoryZugriffe).
+
+2 Schreibstrategien
+- write through
+	Wird sofort zurück geschrieben.
+- write back
+	Sofort auf die nächst höhere Speicherebene gelegt. (L1 -> L2, ...)
+\subsection{Welche Cachekoherenz Protokolle gibt es und wie funktionieren sie?}
+Directory, Snoop (Controller lauschen mit auf den Bus)
+Was macht jetzt das Snoop (in Hardware implementiert) wenn jetzt ein Word / Block vom Memory kommt?
+Es schaut, geht mit das was an, kommt das von meinem Speicher, es legt einen Tag dazu (write / read) - dannn gibt es...?
+
+Direcotry liegt z.T. im Memory, z.T. im Cache
+Verkettete Listen, jene Pointer die auf einen anderen Cache liegen.
+
+\subsection{Welche Einheiten sind beim Directory Protokoll beteiligt?}
+Hauptspeicher, da da beim Direcotry Protokoll verweise sind auf einen lokalen Cache.
+Lokaler Cache
+
+Home Node - jener Node wo das Memory lokal ist und das Datum auch dort drin stehen könnte
+Remote Node - auf einem anderen Cache
+lokaler Node - 
+
+machen das untereinander aus, meistens mit verketteten listen
+\subsection{Was besagt das unter dem Namen Amdahls Law bekannt gewordene Gesetzt?}
+Der Geschwindigkeitszuwachs den wir mit mehreren Prozessoren erreichen, schrumpft mit immer mehr Prozessoren, weil irgendwo noch Teile des Programms sind, die nicht parallelisiert werden können.
