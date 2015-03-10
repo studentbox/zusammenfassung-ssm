@@ -1,0 +1,29 @@
+\chapter{Parallele Rechnerarchitekturen}
+\section{Lernziele}
+\begin{enumerate}
+	\item Sie kennen und verstehen moderne multi Core Architekturen, Memory Architekturen, und Cache Verwaltungen.
+	\item Sie können Einflüsse der Chip Architektur auf das	Performanceverhalten eines Systems abschätzen.
+	\item Sie verstehen den Einsatz der Prozessoren in der Virtualisierung.
+	\item Sie verstehen die Implikationen der modernen Prozessoren auf bei der Ausführung ihrer Programme.
+\end{enumerate}
+\section{Supercomputer}
+Ein Supercomputer ist typischerweise sehr schnell - klar. Aber für die Wissenschaftler, welche ihn einsetzen, ist er immer noch viel zu langsam.
+\subsection{Servercluster vs Grid}
+\begin{enumerate}
+	\item Cluster of Server (Kernel level cluster)
+		\subitem Hochverfügbare Rechner, welche wissen was die Rechner um sie herum gerade tun. Sind über hochverfügbare Netzwerke untereinander verbunden.
+	\item Cluster of Computing Nodes (grid)
+		\subitem Verteilte Rechnernodes, z.B. SETI@home. Die einzelnen Nodes wissen nicht, was die anderen tun und werden von einer zentralen Stelle aus gesteuert.
+\end{enumerate}
+\subsection{Einsatzgebiete Supercomputer}
+\begin{enumeration}
+	\item Wettervorhersagen
+	\item Fluiddynamische Berechnungen
+	\item DNA entschlüsselung
+	\item ...
+\end{enumeration}
+Komplexe Gleichungen lösen kann man sehr stark parallelisieren. Dies ist auch die Stärke von Supercomputern - Parallel lösbare Probleme lösen. Dinge wie einen Index über eine Datenbank legen sind weniger geeignet, da diese nur seriell lösbar sind.
+\subsection{Infiniband}
+Wird in Supercomputer verwendet zur Verbindung der einzelnen Nodes untereinander. Extrem schnell (bis 60Gbit/s). Gibt nur wenige Hersteller, daher sehr teuer.
+\section{SMP - Symmetrische Multiprozessoren}
+Ein Cluster ist lose gekoppelt, während Symmetrische Multiprozessoren sehr viele Dinge untereinander teilen. Es sind zwei oder mehr gleichartige Prozessoren (können verschiedene sein, müssen aber die gleichen Funktionen ausführen können).Sie teilen sich das gleiche Mainmemory und die I/O Devices. Sie sind über einen Bus zusammengeschaltet, oder direkt z.B. via QPI (Intel QuickPath Interconnect). Via Bus stellt ein Bottleneck dar.
