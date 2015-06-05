@@ -120,7 +120,59 @@ Das Problem ist, dass man nicht mehrere BS auf einem physikalischen Rechner lauf
 \end{figure}
 
 \section{HW-Virtualisierung}
+\subsection{Direct Exceution}
+Es gibt Sicherheitsringe. Die x86 Architektur kennt 4 Ringe. User Level Programme laufen im Ring 3. Das OS brauch HW Zugriff und läuft auf Ring 0. Eine Virtualisierungsschicht muss unter Ring 0 gelegt werden oder es braucht eine Schnittstelle vom Hypervisor mit speziellen Befehlssatz. 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.4\linewidth]{fig/sicherheitsringe}
+\caption{Sicherheitsringe}
+\label{fig:sicherheitsringe}
+\end{figure}
+CPU hat mittels den Sicherheitsringe die Möglichkeiten ob die Instruktionen auch das entsprechende Privileg haben. Der Prozess hat die Möglichkeiten mittels eines Algorithmus zu prüfen ob die Instruktionen von einem privilegierten Memory Segment kommen.
 
+\subsection{Binary Translation}
+Im Mainframe wird für jede privilegierte Instruktion ein Trap ausgeführt. Die VMM fängt diese Instruktion ab und emuliert diese. Im x86 ISA sind nicht alle privilegierten Instruktionen Trap geschützt z.B. POPF. Wird diese bswp. im Ring 1 ausgeführt, interessiert das die CPU nicht und wird nicht ausgeführt. Insgesamt gibt es 17 solcher ''nicht abgefanger'' Instruktionen. Abhilfe schafft die binary Translation von VMWare (patentiert!).
+
+Im Bild sieht man, dass es eine Kombination zwischen direkter Ausführung und binary Translation ist. User Level Code wird direkt ausgeführt. Übersetzer Kernel Code ersetzt nicht virtualisierbare Instruktionen. Keine HW Unterstützung nötig. Gast OS voll abstrahiert. User Applikationen laufen direkt und werden nur übersetzt, wenn der GAST-OS Kernel aufgerufen wird.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.4\linewidth]{fig/binary-translation-virt}
+\caption{Binary Translation Virtualisation}
+\label{fig:binary-translation-virt}
+\end{figure}
+Ein nativer System Call braucht 242 Prozess Zyklen. Ein Binary translated System Call braucht 2308 Zyklen!
+
+\subsection{Para Virtualisation (SW Assist)}
+Para (neben) bezieht sich auf Kommunikation zwischen Gast OS und Hypervisor um die Geschwindigkeit zu erhöhen. Aber der Kenel vom OS muss modifiziert werden um nicht virtualsierbare Instruktionen mit Hypercalls zu ersetzen. Die direkt mit dem Virtualization Layer schwatzen. Hypervisor stellt Hypercall Interface zur Verfügung.
+Para ist ziemlich ähnlich wie Binary Translation. Statt im Binary direkt im Source Code! Para braucht keine Laufzeitübersetzung und ist daher schneller. Aber, unveränderte BS können nicht ausgeführt werden! Der grosse Pain.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.4\linewidth]{fig/sw-virtualisierung-ringe}
+\caption{Software unterstützte Virtualisierung}
+\label{fig:sw-virtualisierung-ringe}
+\end{figure}
+
+
+
+\subsection{Full Virtualisation (HW Assist)}
+\label{sec:hw-unterstuetzt-virt}
+VMM und VM haben getrennte Addressbereiche. Dafür musste man neue Operationsmodis kreieren. VMX root (voll privilegiert für VMM) und VMX non-root (nicht voll privilegiert für Gast-VM). Dies reduziert die Gast-VM SW Privilegien ohne auf die Ringe zurückgreifen zu müssen. Dieser neue CPU Modus erlaubt Ringe unterhalb Ring 0. Privlegierte Operatonion gelangen so direkt zum Hypervisor. Der Gast Status wird in virtual machine control structures abgespeichert.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.4\linewidth]{fig/hw-virtualisierung-ringe}
+\caption{Hardware-Virtualisierung Ringe}
+\label{fig:hw-virtualisierung-ringe}
+\end{figure}
+
+\subsubsection{VMM Lifecycle}
+\label{sec:vmm-lifecycle}
+\begin{description}
+	\item[VM Entry] Übergang VMM zu Gast. Eintritt von VMX non-root Operationen. VMLaunch - Instruktionen werden beim initialen Eintritt verwendet. VMResume - Instruktionen werden beim nachfolgenden Eintritten verwendet.
+	\item[VM Exit] Übergang von Gast zu VMM. Eintritt in VMX root Operationen. Speichert Gast Status in VMCS.
+\end{description}
+
+
+\newpage
 \section{Memory-Virtualisierung}
 Physikalisch mapped das OS virtual Page Number zu physical Page Number. Eine VM denkt, dass es physisches Memory vor sich hat und kann so agieren. Aber dieses Memory wird durch den Hypervisor verwaltet. Das gesamte Memory der Maschine wird durch alle VMs geteilt. Der Dreh- und Angelpunkt ist der Hypervisor.
 
@@ -227,6 +279,7 @@ Siehe Popek und Goldberg Anforderungen 1 \ref{sec:popek-goldberg-anforderungen}
 Siehe Abschnitt \ref{sec:virtualisierungsarten}
 
 \subsection{Nennen Sie die neuen Intel Instruktionen mit denen der (Hypervisor) Programmierer den Eintritt/Austritt in die VM veranlassen kann.}
+Siehe Abschnitt \ref{sec:vmm-lifecycle}
 
 \subsection{Was ist eine Virtualisation?}
 Siehe Abschnitt \ref{sec:was-bedeutet-virtualisierung}
@@ -235,7 +288,7 @@ Siehe Abschnitt \ref{sec:was-bedeutet-virtualisierung}
 Siehe Abschnitt \ref{sec:vmm-virtual-machine-monitor}
 
 \subsection{Wo werden im HW unterstuetzten x86 Sicherheitsmodell der Kern, Hypervisor und die Applikationen ausgefuehrt?}
-
+Siehe Abschnitt \ref{sec:hw-unterstuetzt-virt}. Kern und Hypervisor unter Ring 0, Gast-OS im Ring 0, Applikationen Ring 3.
 
 \subsection{Nennen Sie die Gründe für die HW Virtualisierung!}
 Siehe Abschnitt \ref{sec:gruende-hw-virtualisierung}
