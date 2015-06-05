@@ -4,6 +4,7 @@
 Überall kann man Virtualisierung einsetzen. Ob bei Server, Speicher, Applikation, Desktops oder Netzwerk. Mit Virtualisierung will man die Abstraktion von der darunterliegende Gerätschaft erreichen.
 
 \subsection{Virtualisierungsarten}
+\label{sec:virtualisierungsarten}
 \begin{description}
 	\item[HW Partitionierung] Teuer, nur noch auf High End Computer anzutreffen, wie IBM/z, und p Systems, Sun/Oracle Sparc).
 	\item[HW Virtualisierung] Mittels Hypervisor.
@@ -11,6 +12,7 @@
 \end{description}
 
 \subsection{Gründe für eine HW Virtualisierung}
+\label{sec:gruende-hw-virtualisierung}
 \begin{itemize}
 	\item Ressourcen Optimierung
 	\item Konsoldierung
@@ -24,6 +26,7 @@
 IBM virtualisiert auf den Mainframes bereits in den 60er Jahren. Die Virtualisierung der x86-Systeme wurde erst 1999 eingeführt, durch VMWare. Citrix hat 2007 mit Xen/Xen-Server virtualisiert und Mircosoft im 2008 mit Window Server 2008 und Hyper-V.
 
 \subsection{Was bedeutet Virtualisierung?}
+\label{sec:was-bedeutet-virtualisierung}
 Darüber streiten sich Joho und die Geister. Was ist Emulation? Simulation? Imitation?  Virtualisation?
 \begin{description}
 	\item[Emulation] Ein System ahmt ein anderes System nach. Es bekommt den selben Input. Die Verarbeitung wird emuliert. Das führt dazu, dass der Output gleich oder nur fast gleich ist.
@@ -33,6 +36,7 @@ Darüber streiten sich Joho und die Geister. Was ist Emulation? Simulation? Imit
 \end{description}
 
 \subsection{Die drei Anforderungen von Popek und Goldberg}
+\label{sec:popek-goldberg-anforderungen}
 Diese Anforderungen gelten sowohl ans physische wie auch virtuelle System.
 \begin{description}
 	\item[Gleichheit] Jedes Programm verhält sich auf deinen Systemen genau gleich. Wichtig!
@@ -40,7 +44,8 @@ Diese Anforderungen gelten sowohl ans physische wie auch virtuelle System.
 	\item[Ressourcenkontrolle] VMM hat die komplette Kontrolle über Ressourcen wie Memory, I/O der Peripheriegeräte, aber nicht umbedingt über Prozessoraktivität. Es muss für jedes Programm unmöglich sein die System Ressourcen (wie verfügbares Memory) zu beeinflussen. Der Verteiler (Allocator) muss jedesmal aufgerufen werden.
 \end{description}
 
-\subsection{VMM - Virtual Machine Mointor}
+\subsection{VMM - Virtual Machine Monitor}
+\label{sec:vmm-virtual-machine-monitor}
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.4\linewidth]{fig/vmm}
@@ -78,11 +83,12 @@ Eine privilegierte Instruktion verursacht einen Trap im User Modus. Im Superviso
 	\item VMM sollte eine ''virtuelle Plattform Interface'' zu den Gast-SW präsentieren.
 \end{itemize}
 
-
-\subsection{X86-Virtualisierung}
+\newpage
+\section{X86-Virtualisierung}
 Popek und Goldberg sagen, dass eine CPU virtualisierbar ist, wenn alle privilegierten Instruktionen eine Exception erzeugen, wenn sie im unprivilegierten Modus laufen.
 
-\subsubsection{Theorem 1}
+\subsection{Theorem 1}
+\label{sec:poppek-goldberg-theorem1}
 Für beliebige Prozessorarchitekturen der dritten Generation kann
 eine effektive VMM aufgebaut werden, wenn der Satz der
 kontrollkritischen Instruktionen für eine Prozessorarchitektur
@@ -94,7 +100,7 @@ der VMM beeinflussen können (kontrollkritische Instruktionen)
 immer (ge)trapped werden und zur Kontrolle an die VMM
 weitergegeben und verarbeitet (emuliert) werden.
 
-\subsubsection{Theorem 2}
+\subsection{Theorem 2}
 Eine beliebige Prozessorarchitekturen der dritten Generation ist
 rekursiv virtualisierbar, wenn: Sie selbst virtualisierbar ist und für sie ein VMM ohne Zeitabhängigkeiten konstruiert werden
 kann.
@@ -103,7 +109,7 @@ hardwaregestütze Virtualierungsfunktionen, erfüllen diese
 Bedingungen nicht, weswegen sie nicht auf dem klassischen Weg
 virtualisierbar sind.
 
-\subsubsection{Hypervisor}
+\subsection{Hypervisor}
 Das Problem ist, dass man nicht mehrere BS auf einem physikalischen Rechner laufen lassen kann. Da diese konstruiert sind alle Ressourcen zu managen. Daher braucht es eine Zwischenschicht, welche die BS isoliert. Das BS erfährt somit keine Änderung. Der Hypervisor kommt zum Zug.
 
 \begin{figure}[h!]
@@ -113,13 +119,13 @@ Das Problem ist, dass man nicht mehrere BS auf einem physikalischen Rechner lauf
 \label{fig:hypervisor-types}
 \end{figure}
 
-
-\subsection{HW-Virtualisierung}
+\section{HW-Virtualisierung}
 
 \section{Memory-Virtualisierung}
 Physikalisch mapped das OS virtual Page Number zu physical Page Number. Eine VM denkt, dass es physisches Memory vor sich hat und kann so agieren. Aber dieses Memory wird durch den Hypervisor verwaltet. Das gesamte Memory der Maschine wird durch alle VMs geteilt. Der Dreh- und Angelpunkt ist der Hypervisor.
 
 \subsection{Memory Verbrauch}
+\label{sec:ballooning}
 Man kann mit folgenden Möglichkeiten Memory sparen, auch bekannt als Memory Rückgewinnungstechnologien:
 \begin{description}
 	\item[Page Sharing] In homogenen Gast Systemen findet sich viele identische Pages. Algorithmus: Scan all pages, Hash per page, Hash-Collision means same page, check byte by byte, mark as read only. Falls nun doch einer schreiben möchte, wird dies kopiert.
@@ -129,6 +135,7 @@ Man kann mit folgenden Möglichkeiten Memory sparen, auch bekannt als Memory Rü
 	\item[Ballooning] Vergesst die Papers von Bruno (wirklich!). Es ist simpel. Ballooning erlaubt es dem Hypervisor ungenutztes Memory von den VMs abzuziehen und es anderen VMs zur Verfügung zu stellen. Ein Beispiel: Wir haben mehrere VMs mit 8GB alloziert. Die meisten verwenden jedoch nur 4GB effektiv. Nun braucht eine einzelne aber gerade für einen intensiven Prozess 12GB. Nun kommt die Ballooning Technologie zum Einsatz. Der Hypervisor nimmt von den anderen VMs das nicht gebrauchte Memory und stellt es der VM zur Verfügung, welche es tatsächlich braucht. Da das Gast-BS innerhalb der VM läuft, weiss es nicht wie der Total Amount of Memory des physischen Hosts ist. Ballooning macht dem Gast-BS bewusst, über die Speicherknappheit des Hosts. Achtung: Auf der VM muss ein Balloon-Treiber installiert sein.
 \end{description}
 
+\newpage
 \section{OS Virtualisierung}
 ''Hypervisors are the living proof of operating systems's incompetence''. Hypervisor dienen dazu um die Mängel der OS auszugleichen. Nun kommt die OS Virtualisierung, die Antwort der OS Hersteller.
 Es werden keine Hypervisor verwendet, also kein ''Trap and Emulate''. Braucht daher auch nur ganz wenige zusätzliche Prozessorzyklen, es wird nur ein Kern verwendet! (Solaris kann auch mit mehreren Kernen arbeiten)
@@ -180,14 +187,13 @@ Alle virtuellen OS Instanzen sind isoliert von einander:
 	\item[capablities] - Root User Isolation - Partitioniert die Privilegien eines Root-Users. 
 \end{description}
 
+\subsection{Isolation}
 Linux Container - Es braucht also drei wichtige Erweiterungen.
 \begin{description}
 	\item[chroot] Filesystemgrenze für Prozesse -
 	\item[cgroups]  - Ressourcen sharing zwischen Prozess Gruppen - Kernel Feature - Erlauben das feingranulare Allozieren von System Ressourcen wie CPU, Memory, Disk über eine Gruppe von Prozessen. CGroups sind hierarchisch gegliedert. Child erbt von Parent. Da alle Prozesse aus der init-Prozess ein Child von einem anderen Prozess ist, nennt man das Mono-Hierarchie (Einzel-Baum).  Beim Erzeugen eines Child-Prozess erbt der Prozess den Umgebungskontext wie die PATH Variabel uvw. vom Parent. Im Unterschied zum herkömmlichen Modell (single-tree), haben wir mit cgroups mehrere unanbhängige Prozess-Bäume. Bsp: memory (setzt limiten auf den Memory Vebrauch), freezer, devices usw.
 	\item[ns] - Namespaces - Die Implementation von Container ist eine offensichtliche Verwendung von Namespaces. Ein Namespace abstrahiert eine globale Ressource in der Art, dass der zum Namespace gehörende Prozess meint, ihm gehört die Ressource einzigartig. Änderungen an der globalen Ressourcen sind nur sichtbar für diejenigen, welche im gleichen Namensraum sind. Bsp: PID namespaces isolieren den Prozess ID Namensraum (pro Container unique, aber so mehrere init Prozess mit ID 1 über mehrere Container möglich). Weitere User namespaces, Network, IPC, UTS, Mount namespaces.
 \end{description} 
-
-\subsection{Isolation}
 
 \subsection{Docker}
 Wir kennen nun die Linux Container. Mit Docker geht man eine Stufe tiefer. Ein Host hat n-Base Images. Das ist das OS wie Ubuntu, Redhat. Pro Base-Image kann man VMs hinzufügen. Eine VM repräsentiert eine Applikation. Wie PHP, MySQL, Wordpress.
@@ -202,17 +208,43 @@ Docker verwendet die Möglichkeit von LXC. Solche Container sind read-only und h
 \end{figure}
 
 
+\section{Lernziele}
+
 \section{Fragen}
+\subsection{Wann ist eine CPU nach Poppek u. Goldberg virtualisierbar?}
+''Nach Popek und Goldberg ist eine CPU (ISA) virtualisierbar, wenn
+alle privilegierten Instruktionen eine Exception erzeugen, wenn sie
+in einem unprivilegierten Prozessormodus ausgeführt werden.
+Alle sensiblen Instruktionen sind privilegiert''
 
-\subsection{Der Studierende kennt die technische Grundlage wie Server Virtualisierung implementiert ist.}
+\subsection{Was versteht man unter Emulation?}
+Siehe Abschnitt \ref{sec:was-bedeutet-virtualisierung}
 
-\subsection{Der Studierende kennt Vor-/Nachteile der virtuellen Maschine}
+\subsection{Erklären Sie nach Poppek u. Goldberg das ''mapping der virtuellen Maschine'' und den darin verwendeten Homomorphismus!}
+Siehe Popek und Goldberg Anforderungen 1 \ref{sec:popek-goldberg-anforderungen}
 
-\subsection{Der Studierende kann sein Erlerntes anwenden auf den Unterhalt und Betrieb eines Datencenters.}
+\subsection{Nennen Sie ein paar verschiedene Virtualisierungen die eine wichtige Rolle im Datacenter spielen!}
+Siehe Abschnitt \ref{sec:virtualisierungsarten}
 
-\subsection{Der Studierende kennt die technischen Grundlagen wie OS
-Virtualisierung implementiert ist.}
+\subsection{Nennen Sie die neuen Intel Instruktionen mit denen der (Hypervisor) Programmierer den Eintritt/Austritt in die VM veranlassen kann.}
 
-\subsection{Der Studierende kennt Vor-/Nachteile der OS Virtualisierung.}
+\subsection{Was ist eine Virtualisation?}
+Siehe Abschnitt \ref{sec:was-bedeutet-virtualisierung}
 
-\subsection{Der Studierende kann sein erlerntes anwenden auf den Unterhalt und Betrieb eines Datacenters.}
+\subsection{Welche Aufgaben muss eine VMM lösen können?}
+Siehe Abschnitt \ref{sec:vmm-virtual-machine-monitor}
+
+\subsection{Wo werden im HW unterstuetzten x86 Sicherheitsmodell der Kern, Hypervisor und die Applikationen ausgefuehrt?}
+
+
+\subsection{Nennen Sie die Gründe für die HW Virtualisierung!}
+Siehe Abschnitt \ref{sec:gruende-hw-virtualisierung}
+
+\subsection{Was ist eine Simulation?}
+Siehe Abschnitt \ref{sec:was-bedeutet-virtualisierung}
+
+\subsection{Erklaeren Sie das Theorem 1 nach Poppek u. Goldberg!}
+Siehe Abschnitt \ref{sec:poppek-goldberg-theorem1}
+
+\subsection{Erklaeren Sie den Vorgang ''Ballooning''!}
+Siehe Abschnitt \ref{sec:ballooning}
