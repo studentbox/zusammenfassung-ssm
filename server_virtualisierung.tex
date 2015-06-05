@@ -80,6 +80,39 @@ Eine privilegierte Instruktion verursacht einen Trap im User Modus. Im Superviso
 
 
 \subsection{X86-Virtualisierung}
+Popek und Goldberg sagen, dass eine CPU virtualisierbar ist, wenn alle privilegierten Instruktionen eine Exception erzeugen, wenn sie im unprivilegierten Modus laufen.
+
+\subsubsection{Theorem 1}
+Für beliebige Prozessorarchitekturen der dritten Generation kann
+eine effektive VMM aufgebaut werden, wenn der Satz der
+kontrollkritischen Instruktionen für eine Prozessorarchitektur
+eine Untermenge des Satzes der privilegierten Instruktionen
+darstellt.
+Im Prinzip besagt das Theorem, das es, um einen VMM zu bauen
+genügt, wenn alle Instruktionen, die das korrekte funktionieren
+der VMM beeinflussen können (kontrollkritische Instruktionen)
+immer (ge)trapped werden und zur Kontrolle an die VMM
+weitergegeben und verarbeitet (emuliert) werden.
+
+\subsubsection{Theorem 2}
+Eine beliebige Prozessorarchitekturen der dritten Generation ist
+rekursiv virtualisierbar, wenn: Sie selbst virtualisierbar ist und für sie ein VMM ohne Zeitabhängigkeiten konstruiert werden
+kann.
+Einige Architekturen, wie zum Beispiel die x86-Architektur ohne
+hardwaregestütze Virtualierungsfunktionen, erfüllen diese
+Bedingungen nicht, weswegen sie nicht auf dem klassischen Weg
+virtualisierbar sind.
+
+\subsubsection{Hypervisor}
+Das Problem ist, dass man nicht mehrere BS auf einem physikalischen Rechner laufen lassen kann. Da diese konstruiert sind alle Ressourcen zu managen. Daher braucht es eine Zwischenschicht, welche die BS isoliert. Das BS erfährt somit keine Änderung. Der Hypervisor kommt zum Zug.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.8\linewidth]{fig/hypervisor-types}
+\caption{Hypervisor Arten}
+\label{fig:hypervisor-types}
+\end{figure}
+
 
 \subsection{HW-Virtualisierung}
 
@@ -89,11 +122,72 @@ Physikalisch mapped das OS virtual Page Number zu physical Page Number. Eine VM 
 \subsection{Memory Verbrauch}
 Man kann mit folgenden Möglichkeiten Memory sparen, auch bekannt als Memory Rückgewinnungstechnologien:
 \begin{description}
-	\item[Page Sharing] In homogenen Gast Systemen findet sich viele identische Pages.
-	\item[Page Patching] ''Fast gleiche'' Pages gibt es sehr viele.
-	\item[Page Compression] Viele Pages die in naher Zukunft nicht verwendet werden.
-	\item[Balloning] Wenn das Memory knapp wird
+	\item[Page Sharing] In homogenen Gast Systemen findet sich viele identische Pages. Algorithmus: Scan all pages, Hash per page, Hash-Collision means same page, check byte by byte, mark as read only. Falls nun doch einer schreiben möchte, wird dies kopiert.
+	\item[Page Patching] ''Fast gleiche'' Pages gibt es sehr viele. Bei nur wenig Differenz von Pages werden die als ''fast gleich'' beurteilt. VM 1 arbeitet schlussendlich mit der echten Page. Die VM 2 arbeitet schlussendlich mit der Page von der VM 1 und einer Differenz, welches Teil einer anderen Page ist.
+	\item[Page Compression] Es gibt viele Pages die in naher Zukunft nicht verwendet werden. Diese können komprimiert werden.
+	
+	\item[Ballooning] Vergesst die Papers von Bruno (wirklich!). Es ist simpel. Ballooning erlaubt es dem Hypervisor ungenutztes Memory von den VMs abzuziehen und es anderen VMs zur Verfügung zu stellen. Ein Beispiel: Wir haben mehrere VMs mit 8GB alloziert. Die meisten verwenden jedoch nur 4GB effektiv. Nun braucht eine einzelne aber gerade für einen intensiven Prozess 12GB. Nun kommt die Ballooning Technologie zum Einsatz. Der Hypervisor nimmt von den anderen VMs das nicht gebrauchte Memory und stellt es der VM zur Verfügung, welche es tatsächlich braucht. Da das Gast-BS innerhalb der VM läuft, weiss es nicht wie der Total Amount of Memory des physischen Hosts ist. Ballooning macht dem Gast-BS bewusst, über die Speicherknappheit des Hosts. Achtung: Auf der VM muss ein Balloon-Treiber installiert sein.
 \end{description}
+
+\section{OS Virtualisierung}
+''Hypervisors are the living proof of operating systems's incompetence''. Hypervisor dienen dazu um die Mängel der OS auszugleichen. Nun kommt die OS Virtualisierung, die Antwort der OS Hersteller.
+Es werden keine Hypervisor verwendet, also kein ''Trap and Emulate''. Braucht daher auch nur ganz wenige zusätzliche Prozessorzyklen, es wird nur ein Kern verwendet! (Solaris kann auch mit mehreren Kernen arbeiten)
+
+\subsection{Container / Zone}
+Eine Instanz eines virtuellen OS wird Container (Linux) oder Zone (Solaris) genannt. Eine virtuelle OS Instanz ohne eingeschalteten Ressourcen Mgmt. ist nicht für die Produktion geeignet.
+
+\subsection{VMs vs. Container}
+VMs sind schwergewichtig, Container sind leichtgewichtig. Die Provisionierung (Bereitstellung) einer VM dauert einiges länger als eines Containers!
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/vms-vs-containers}
+\caption{VMs vs. Containers}
+\label{fig:vms-vs-containers}
+\end{figure}
+
+\subsection{Was kann die OS Virtualisierung?}
+\begin{itemize}
+	\item Feingranulare Kontrolle der individuellen Prozesse und Applikationen.
+	\item Sichere Isolation von Applikationen.
+	\item Transparente Migration von Applikationen (siehe Docker) möglich. (Anmerkung: Der Hypervisior migriert nur ganze OS Instanzen.)
+\end{itemize}
+
+\subsection{Was kann OS Virtualisierung nicht?}
+\begin{itemize}
+	\item Keine fremden OS möglich. Auf Windows kann ich nur Windows bringen.
+	\item Zonen müssen auf dem selben Patch Level laufen wie OS/Kern.
+	\item Anforderungen an SysAdmin steigen.
+	\item Ressourcen Mgmt. muss eingeschalten werden (Solaris).
+\end{itemize}
+
+\subsection{Container-Architektur}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.7\linewidth]{fig/container-architektur}
+\caption{Container-Architektur}
+\label{fig:container-architektur}
+\end{figure}
+
+\subsection{Beispiel: Linux OS Virtualisierung}
+\subsubsection{VServer}
+Eine sehr leichtgewichtige Art der OS Virtualisierung. Es benötigt nur eine Instanz des Linux Kernel. VServer benötigt nur ein paar wenige Modifikationen im Kern und ein paar OS Userland Tools. Der Kern verwaltet alle System Ressourcen.
+
+Alle virtuellen OS Instanzen sind isoliert von einander:
+\begin{description}
+	\item[chroot] - File System Isolation - Damit wird das Root-Directory (/) an einen anderen Ort gelegt. Das modifizierte Umfeld nennt man chroot jail.
+	\item[chcontext] - Process Isolation - Ein Linux Utilty, welches einen neuen Security Kontext erzeugt und die Kommandos darin ausführt. Jede OS Instanz verfügt über einen eigenen Prozess-Ausführungskontext.
+	\item[chbind] - Network Isolation - Dieses Kommando ist ein System Call. Lockt den resultierend Prozess mit seinen Kinder zu einer spezifischen IP Adresse.
+	\item[capablities] - Root User Isolation - Partitioniert die Privilegien eines Root-Users. 
+\end{description}
+
+Linux Container - Es braucht also drei wichtige Erweiterungen.
+\begin{description}
+	\item[chroot] Filesystemgrenze für Prozesse -
+	\item[cgroups]  - Ressourcen sharing zwischen Prozess Gruppen - Kernel Feature - Erlauben das feingranulare Allozieren von System Ressourcen wie CPU, Memory, Disk über eine Gruppe von Prozessen. CGroups sind hierarchisch gegliedert. Child erbt von Parent. Da alle Prozesse aus der init-Prozess ein Child von einem anderen Prozess ist, nennt man das Mono-Hierarchie (Einzel-Baum).  Beim Erzeugen eines Child-Prozess erbt der Prozess den Umgebungskontext wie die PATH Variabel uvw. vom Parent. Im Unterschied zum herkömmlichen Modell (single-tree), haben wir mit cgroups mehrere unanbhängige Prozess-Bäume. Bsp: memory (setzt limiten auf den Memory Vebrauch), freezer, devices usw.
+	\item[ns] - Namespaces - Die Implementation von Container ist eine offensichtliche Verwendung von Namespaces. Ein Namespace abstrahiert eine globale Ressource in der Art, dass der zum Namespace gehörende Prozess meint, ihm gehört die Ressource einzigartig. Änderungen an der globalen Ressourcen sind nur sichtbar für diejenigen, welche im gleichen Namensraum sind. Bsp: PID namespaces isolieren den Prozess ID Namensraum (pro Container unique, aber so mehrere init Prozess mit ID 1 über mehrere Container möglich). Weitere User namespaces, Network, IPC, UTS, Mount namespaces.
+\end{description} 
+
+\subsection{Isolation}
 
 
 \section{Fragen}
@@ -102,4 +196,11 @@ Man kann mit folgenden Möglichkeiten Memory sparen, auch bekannt als Memory Rü
 
 \subsection{Der Studierende kennt Vor-/Nachteile der virtuellen Maschine}
 
-\subsection{Der Studierende kann sein Erlerntes anwenden auf den Unterhalte und Betrieb eines Datencenters.}
+\subsection{Der Studierende kann sein Erlerntes anwenden auf den Unterhalt und Betrieb eines Datencenters.}
+
+\subsection{Der Studierende kennt die technischen Grundlagen wie OS
+Virtualisierung implementiert ist.}
+
+\subsection{Der Studierende kennt Vor-/Nachteile der OS Virtualisierung.}
+
+\subsection{Der Studierende kann sein erlerntes anwenden auf den Unterhalt und Betrieb eines Datacenters.}
