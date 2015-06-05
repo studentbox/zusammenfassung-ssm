@@ -189,6 +189,18 @@ Linux Container - Es braucht also drei wichtige Erweiterungen.
 
 \subsection{Isolation}
 
+\subsection{Docker}
+Wir kennen nun die Linux Container. Mit Docker geht man eine Stufe tiefer. Ein Host hat n-Base Images. Das ist das OS wie Ubuntu, Redhat. Pro Base-Image kann man VMs hinzufügen. Eine VM repräsentiert eine Applikation. Wie PHP, MySQL, Wordpress.
+
+Docker verwendet die Möglichkeit von LXC. Solche Container sind read-only und hoch portierbar. Dies ist ein Software-Layer über dem LCX. Dockt wortwörtlich an jedes Linux an.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{fig/lxc-vs-docker}
+\caption{LXC vs. Docker}
+\label{fig:lxc-vs-docker}
+\end{figure}
+
 
 \section{Fragen}
 
