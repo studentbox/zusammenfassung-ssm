@@ -1,15 +1,17 @@
 \chapter{Server-Virtualisierung}
 
 \section{Grundlagen}
-Überall kann man Virtualisierung einsetzen. Ob bei Server, Speicher, Applikation, Desktops oder Netzwerk. Mit Virtualisierung will man die Abstraktion von der darunterliegende Gerätschaft erreichen.
+Überall kann man Virtualisierung einsetzen. Ob bei Server, Speicher, Applikation, Desktops oder Netzwerk. Mit Virtualisierung will man die Abstraktion von der darunterliegende Geräteschaft erreichen.
 
 \subsection{Virtualisierungsarten}
 \label{sec:virtualisierungsarten}
 \begin{description}
-	\item[HW Partitionierung] Teuer, nur noch auf High End Computer anzutreffen, wie IBM/z, und p Systems, Sun/Oracle Sparc).
+	\item[HW Partitionierung] Teuer, nur noch auf High End Computer anzutreffen. Wie IBM/z, p Systems, Sun/Oracle Sparc.
 	\item[HW Virtualisierung] Mittels Hypervisor.
-	\item[OS Virtualisierung] Jung, leichtgewichtig Virtualisierungsart. 
+	\item[OS Virtualisierung] Junge, leichtgewichtige Virtualisierungsart. 
 \end{description}
+
+\texttt{Partitionierung: Aufteilung eines Dinges in mehrere unabhängige Elemente.}
 
 \subsection{Gründe für eine HW Virtualisierung}
 \label{sec:gruende-hw-virtualisierung}
@@ -39,7 +41,7 @@ Darüber streiten sich Joho und die Geister. Was ist Emulation? Simulation? Imit
 \label{sec:popek-goldberg-anforderungen}
 Diese Anforderungen gelten sowohl ans physische wie auch virtuelle System.
 \begin{description}
-	\item[Gleichheit] Jedes Programm verhält sich auf deinen Systemen genau gleich. Wichtig!
+	\item[Gleichheit] Jedes Programm verhält sich auf beiden Systemen genau gleich. Wichtig!
 	\item[Effektivität] Es soll, wann immer möglich, alle Instruktionen direkt auf dem physischen Prozessor ausgeführt werden. Ohne Intervention der VMM.
 	\item[Ressourcenkontrolle] VMM hat die komplette Kontrolle über Ressourcen wie Memory, I/O der Peripheriegeräte, aber nicht umbedingt über Prozessoraktivität. Es muss für jedes Programm unmöglich sein die System Ressourcen (wie verfügbares Memory) zu beeinflussen. Der Verteiler (Allocator) muss jedesmal aufgerufen werden.
 \end{description}
@@ -68,6 +70,7 @@ Es gibt zwei Betriebsmodis.
 Eine privilegierte Instruktion verursacht einen Trap im User Modus. Im Supervisor Modus gibt es keinen Trap. Kontrollkritische Instruktionen (control sensitive) versuchen die Config der Systemressourcen zu ändern.
 
 \subsection{Vorteile (Hypervisor) Virtualisierung}
+Möglichkeiten, welche die Hypervisor Technologie mitbringt:
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.7\linewidth]{fig/vorteile-hypervisor-virtualisierung}
@@ -76,6 +79,7 @@ Eine privilegierte Instruktion verursacht einen Trap im User Modus. Im Superviso
 \end{figure}
 
 \subsection{Challenges beim Betrieb einer VMM}
+Die Challenges gelten wohl für die VMM und nicht für den Sysadmin, der das System betreibt.
 \begin{itemize}
 	\item BS und APP wissen nicht, dass eine VMM existiert.
 	\item VMM sollte SW Stack gegenüber anderen VMs isolieren.
