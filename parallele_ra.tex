@@ -10,9 +10,9 @@
 Ein Supercomputer ist typischerweise sehr schnell - klar. Aber für die Wissenschaftler, welche ihn einsetzen, ist er immer noch viel zu langsam.
 \subsection{Servercluster vs Grid}
 \begin{enumerate}
-	\item Cluster of Server (Kernel level cluster)
-		\subitem Hochverfügbare Rechner, welche wissen was die Rechner um sie herum gerade tun. Sind über hochverfügbare Netzwerke untereinander verbunden.
-	\item Cluster of Computing Nodes (grid)
+	\item \textbf{Cluster of Server (Kernel level cluster)}
+		\subitem Hochverfügbare Rechner, welche wissen was die anderen Rechner um sie herum gerade tun. Sind über hochverfügbare Netzwerke untereinander verbunden.
+	\item \textbf{Cluster of Computing Nodes (grid)}
 		\subitem Verteilte Rechnernodes, z.B. SETI@home. Die einzelnen Nodes wissen nicht, was die anderen tun und werden von einer zentralen Stelle aus gesteuert.
 \end{enumerate}
 \subsection{Einsatzgebiete Supercomputer}
@@ -22,12 +22,290 @@ Ein Supercomputer ist typischerweise sehr schnell - klar. Aber für die Wissensc
 	\item DNA entschlüsselung
 	\item ...
 \end{enumerate}
-Komplexe Gleichungen lösen kann man sehr stark parallelisieren. Dies ist auch die Stärke von Supercomputern - Parallel lösbare Probleme lösen. Dinge wie einen Index über eine Datenbank legen sind weniger geeignet, da diese nur seriell lösbar sind.
+Die Stärke von Supercomputern ist das Lösen von parallel lösbaren Problemen. Daher funktionieren Aufgaben wie z.B. eine Gleichung lösen auf einem Supercomputer sehr schnell, andere Aufgaben wie das Erstellen eines Index über eine Datenbank, gleich schnell wie auf einem einfachen PC.
 \subsection{Infiniband}
 Wird in Supercomputer verwendet zur Verbindung der einzelnen Nodes untereinander. Extrem schnell (bis 60Gbit/s). Gibt nur wenige Hersteller, daher sehr teuer.
-\section{SMP - Symmetrische Multiprozessoren}
-Ein Cluster ist lose gekoppelt, während Symmetrische Multiprozessoren sehr viele Dinge untereinander teilen. Es sind zwei oder mehr gleichartige Prozessoren (können verschiedene sein, müssen aber die gleichen Funktionen ausführen können).Sie teilen sich das gleiche Mainmemory und die I/O Devices. Sie sind über einen Bus zusammengeschaltet, oder direkt z.B. via QPI (Intel QuickPath Interconnect). Via Bus stellt ein Bottleneck dar.
+\section{Processor-Level Parallelism}
+\subsection{SMP - Symmetrische Multiprozessoren}
+Eine SMP Architektur besteht aus mehreren physischen Prozessoren. Diese phyischen Prozessoren müssen alle dieselben Funktionen ausführen können. Das bedeutet, dass nun die laufenden Prozesse frei auf die Prozessoren verteilt werden können.
+Das spezielle an symmetrischen Multiprozessoren ist, dass der Speicher und die I/O Geräte über alle Prozessoren hinweg geteilt wird, wie in Abbildung \ref{fig:mc_simple_chip} dargestellt ist. Sie sind über einen Bus zusammengeschaltet (Bottleneck), oder direkt z.B. via QPI (Intel QuickPath Interconnect). 
 
+\subsection{CMP - Chip Level Multiprocessing}
+Danach begann man, die einzelnen Prozessoren in einem einzelnen Chip zusammenzufassen, was in einer verdoppelten Performance pro Prozessorchip resultiert. Eine solche Architektur ist in Abbildung \ref{fig:mc_shared_cache_chip} zu sehen. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.15\textwidth}
+		\includegraphics[width=\textwidth]{fig/mc_one}
+		\caption{Konventioneller Mikroprozessor}
+		\label{fig:mc_conventional}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.27\textwidth}
+		\includegraphics[width=\textwidth]{fig/mc_simple_chip}
+		\caption{Simple Chip Multiprozessor}
+		\label{fig:mc_simple_chip}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.25\textwidth}
+		\includegraphics[width=\textwidth]{fig/mc_shared_cache}
+		\caption{Shared Cache Chip Multiprozessor}
+		\label{fig:mc_shared_cache_chip}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.25\textwidth}
+		\includegraphics[width=\textwidth]{fig/mc_shared_cache_mt}
+		\caption{CMT - Multithreaded, Shared Chip Multiprozessor}
+		\label{fig:mc_shared_cache:mt}
+	\end{subfigure}
+	
+	\caption{Cache Strukturen}
+	\label{fig:cache_strukturen}
+\end{figure}
+
+\section{Instruction-Level Parallelism}
+\subsection{Pipelines}
+Instruktionen aus dem Memory zu holen ist extrem langsam. Um dieses Problem zu beheben, hatten Prozessoren schon früh die Möglichkeit, Instruktionen frühzeitig aus dem Memory zu holen, sodass sie bereitstanden wenn sie gebraucht wurden.
+Man teilte daher die Instruktion in 2 Teile - Fetching und Execution. Das Konzept einer Pipeline geht hier noch weiter und unterteilt die Instruktion in noch mehr Teile, die alle von einem speziellen Stück Hardware ausgeführt werden - und dies erst noch parallel.
+
+Die Abbildung \ref{fig:pipeline} zeigt eine solche Pipeline mit 5 Schritten. Zuerst wird die Instruktion geholt, danach wird entschieden was für eine es ist und was für Operanden gebraucht werden, anschliesend werden diese geholt und die eigentliche Instruktion ausgeführt. Abschliessend wird das Resultat gespeichert oder weiterverarbeitet.
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{fig/pipeline}
+	\caption{Pipeline}
+	\label{fig:pipeline}
+\end{figure}
+
+\subsection{Superskalare Architektur}
+Ein zweiter, unabhängiger Ansatz ist es, dass man nebst einer Pipeline auch noch die Instruktionsausführung parallelisiert, da eine Instruktionsausführung einiges länger dauert als z.B das Verarbeiten des Resultats. Dabei wird die Tatsache ausgenutzt, dass eine Instruktion auf einem Prozessor z.B. nur die ALU, die nächste Instruktion nur den Bitshifter braucht. Daher kann man diese Instruktionen parallelisiert ausführen, d.h. gleichzeitig eine Multiplikation und ein Bitshift, auf getrennten Bereichen auf der CPU. Abbildung \ref{fig:superskalar} zeigt ein Design einer solchen Superskalaren Architektur.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/superskalar}
+\caption{}
+\label{fig:superskalar}
+\end{figure}
+
+\section{SMT - Simultanous Multithreading}
+Superskalare Architekturen tönen super gut, haben allerdings auch ihre Limitierungen. Wenn zwei Instruktionen voneinander abhängen, können sie nicht gleichzeitig auf die Recheneinheiten gelegt werden, was bedeutet, dass in der Praxis nie alle Recheneinheiten einer CPU gleichzeitig ausgelastet werden können, da die Applikation dies so nicht zulässt.
+
+In einer Umgebung mit vielen Threads (auf dem Computer, auf dem dieser Text geschrieben wurde, laufen im Moment über 1'000 Threads gleichzeitig), können nun mit einer SMT Architektur in jedem Prozesszyklus mehrere Threads gleichzeitig auf demselben Prozessorkern rechnen, da die Instruktionen auf mehrere Einheiten verteilt werden (die eine braucht die ALU, die andere die FPU, ...). Da genügend Threads mit Instruktionen zur Auswahl stehen, kann der Prozessor auch einfach auswählen, welche Instruktionen als nächstes ausgeführt werden. So können alle Funktionseinheiten der CPU optimal ausgelastet werden.
+
+Um eine solche Architektur in Hardware zu implementieren, benötigt es einfach mehr Register für die einzelnen Threads, sowie eine zusätzliche Kontrolleinheit in der Pipeline um die Threads auf dem Prozessor zu verteilen.
+
+\subsection{CMT - Chip Level Multi Threading}
+Wenn man nun mehrere Prozessoren auf demselben Chip hat und zusätzlich noch Multithreading anwendet, hat man eine Chip Level Multithreading Architektur (CMT). Wird heute angewendet.
+
+\section{Klassifikation nach Flynn}
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/flynn}
+\caption{}
+\label{fig:flynn}
+\end{figure}
+\begin{enumerate}
+	\item {SISD - Single Instruction Single Data} \\
+		Ein klassischer Von-Neumann-Rechner
+	\item {SIMD - Single Instruction Multiple Data} \\
+		Ein Vektorrechner, VLIW-Rechner
+	\item {MISD - Multiple Instruction single Data} \\
+		Sehr selten, eingesetzt für Machine Learning oder Fehlerresistente Berechnung
+	\item {MIMD - Multiple Instruction Multiple Data} \\
+		Parallellrechner, moderne symmetrische Multiprozessoren
+\end{enumerate}
+
+\section{Speicherorganisation in SMP Rechnern}
+
+\subsection{Shared Memory Architektur}
+Wir haben mehrere Prozessoren, die miteinander ein Rechner bilden, d.h. ein MIMD Rechner (SMP). Dabei sollen alle das Memory teilen, in einem grossen, global adressierten Speicher. Dies bietet den Vorteil einer hohen Kommunikationsleistung, kleiner Latenz, kleiner Hardwareaufwand und einfacher Programmierung sowie hardware
+\subsubsection{UMA - Uniform Memory Access}
+Hier ist die Speicherzugriffszeit gleich (uniform) für alle Adressen. Dabei wird üblicherweise ein gemeinsamer, zentraler Speicher eingesetzt.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/uma}
+\caption{UMA Architektur}
+\label{fig:uma}
+\end{figure}
+\subsubsection{NUMA - Non-Uniform Memory Access}
+Die Zugriffszeit ist nicht für alle Speicherbereiche gleich, weil der Speicher verteilt ist.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/numa}
+\caption{NUMA Architektur}
+\label{fig:numa}
+\end{figure}
+\subsection{Private Memory}
+Hier hat jeder Knoten seinen eigenen Speicher. Dabei wird nicht über einen gemeinsamen Adressraum kommuniziert, sondern via Nachrichten. Das bedeutet höhere Administrationskosten, ein langsameres Netzwerk als via einen Bus, welches dafür sehr einfach erweiterbar ist.
+Prozessoren haben sonst nur Zugriff auf ihren eigenen Speicher.
+
+\section{Mirrored Memory}
+Dabi wird einfach RAM von einigen RM Modulen auf andere dupliziert. Soll die Ausfallsicherheit erhöhen im Falle eines Fehlers des RAM Moduls. Bringt in der Praxis nicht wirklich viel.
+
+\section{Amdahls Gesetz}
+Besagt, dass Programme nur bis zu einem gewissen Punkt parallelisierbar sind, denn irgendwo gibt es Punkte, welche nicht parallelisierbar sind. Sagen wir, 20\% eines Programmes ist nicht parallelisierbar. Beim Hinzufügen von Prozessoren sinkt die Ausführungszeit des Programmes immer mehr, unterschreitet jedoch niemals die 20\%, welche nicht parallelisierbar sind. 
+
+Für die Berechnung der relativen Rechenzeit gilt die Formel \ref{eq:amdahl}.
+
+\begin{equation}\label{eq:amdahl}
+Relative\ Rechenzeit\ T = a + \frac{1-a}{n}
+\end{equation}
+
+$ a $ ist dabei der nicht parallelisierbare Anteil. Ein Programm auf einem Prozessor ($ n $) benötigt daher eine Rechenzeit von 1. Mit 2 Prozessoren sind es nur noch 0.6, mit 10 0.28 und mit 100 0.202. Es ist klar, dass der Wert daher gegen 0.2 konvergiert.
+
+Abbildung \ref{fig:amdahl} soll dies verdeutlichen.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/amdahl}
+\caption{Amdahls Gesetz}
+\label{fig:amdahl}
+\end{figure}
+
+Die relative Leistung eines Programmes ist definiert als die Umkehrung von der relativen Rechenzeit, wie in Formel \ref{eq:amdahl_leistung} abgebildet.
+
+\begin{equation}\label{eq:amdahl_leistung}
+	Leistung\ P = \frac{1}{Relative\ Rechenzeit\ T }
+\end{equation}
+
+\section{Cachekohärenz}
+\subsection{Write Through vs Write Back}
+Beim Write Through Cache wird der Ursprungsspeicher beim Verändern des gecachten Werts ebenfalls verändert.
+
+Beim Write Back Cache-Verfahren wird der Hauptspeicher nicht sofort verändert. 
+\subsection{Probleme mit Caches}
+Das Problem bei beiden Verfahren ist, dass andere Prozessoren von der Variable alte, nicht mehr gültige Werte im Cache haben können.
+\subsection{Cachekohärenzprotokolle}
+\subsubsection{Snoopy}
+Da ja alle Zugriffe über einen gemeinsamen Bus oder Switch laufen, können alle Prozessoren den Bus beobachten und erkennen, welche Blöcke wo von wem gespeichert sind. Dies skaliert allerdings nicht sonderlich gut (mehr als 64 Prozessoren liegen da nicht drin), da der Bus zu wenig Bandbreite besitzt.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/snoopy}
+\caption{Snoopy Cachekohärenzprotokoll}
+\label{fig:snoopy}
+\end{figure}
+
+Der Cache kann dargestellt werden als eine einfache Liste von Speicherblöcken, welche nun zusätzlich noch ein Status Flag haben, welches verschiedene Werte annehmen kann. Wenn z.B. nun irgendwo auf dem Bus ein Prozessor den Wert einer Variable ändert die im Cache eines anderen Prozessors bereits vorhanden ist, merkt das der andere Cache und setzt seinen Cache eintrag auf 'invalid'.
+
+\subsubsection{Directory}
+Eine zentrale Liste mit allen Cache Blöcken darin. Zusätzlich wird notiert, welcher Prozessor welche Cache Blöcke besitzt, zusammen mit dem aktuellen Zustand (z.B. dass er überall up-to-date ist, oder dass er nirgends drin ist usw.).
+
+Wenn wir nun eine Architektur haben, bei denen mehrere Prozessoren involviert sind und diese je ein eigenes Memory haben, hat jeder Prozessor dazu noch sein eigenes Cache Directory, in dem Informationen über die Blöcke in diesem Speicher notiert sind.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/directory_protocol}
+\caption{Directory Protokoll}
+\label{fig:directory_protocol}
+\end{figure}
+
+Abbildung \ref{fig:directory_protocol} zeigt die Vorgehensweise. (Node = Prozessor). Der Local Node möchte eine Operation auf einem Speicherbereich durchführen, welcher nicht in seinem lokalen Memory liegt. Er fragt den Home Node des Speicherbereichs, was denn der aktuelle Wert ist. Nach der Operation schreibt er die Daten zurück in den Hauptspeicher, welcher alle Kopien vom Cache benachrichtigt. 
+
+ToDo: Linked Lists Implementation.
+
+\subsection{Gemeinsamer Cache}
+Grösserer Hardwareaufwand und Speicherzugriffe sind sequentialisiert -  d.h. langsamer.
+\subsection{Unterteilung der Daten}
+Bei Daten, die von mehreren Prozessoren verwendet werden, gibt es jeweils nur eine Kopie. Die Unterteilung übernimmt die Software selbst, indem es das Programm in Abschnitte unterteilt. Nach jedem Abschnitt werden alle Caches in den Speicher geschrieben (Cache flush). Wenn die Abschnitte zu klein sind, gibt es zu viele Cache Flushes, wenn sie zu gross sind können die Programme nicht effizient parallelisiert werden.
+
+ Dieser Ansatz ist nicht sonderlich effizient, da es von konservativen Annahmen ausgeht.
+ 
+\section{Verbindungsnetzwerke}
+Man möchte bei Verbindungen möglichst hohe Leistung haben. Das heisst, dass man viele Leitungen benötigt. Gleichzeitig möchte man niedrige Kosten, was heisst dass man nur wenig Leitungen einsetzen darf.
+
+\subsection{Lineares Feld}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/lineares_feld}
+\caption{Lineares Feld}
+\label{fig:lineares_feld}
+\end{figure}
+
+Unendlich skalierbar (hardwaretechnisch gesehen), offensichtliche Limitierungen bei der Bandbreite und Latenz.
+
+\subsection{Ring}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/ring}
+\caption{Ring}
+\label{fig:ring}
+\end{figure}
+
+Ebenfalls unbeschränkt skalierbar. Wenn in beide Richtungen traversierbar, ist die maximale Latenz die Hälfte aller Knoten.
+
+\subsection{Stern}
+ 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/stern}
+\caption{Stern}
+\label{fig:stern}
+\end{figure}
+
+Alle Kommunikation läuft via das Zentrum des Sterns, daher nicht skalierbar. Dafür sehr grosse Bandbreite und niedrige Latenz.
+
+\subsection{Baum}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/baum}
+\caption{Baum}
+\label{fig:baum}
+\end{figure}
+
+Der Baum ist sehr gut skalierbar und bietet eine ausgewogene Latenz. Dafür kann die Bandbreite eingeschränkt sein.
+
+\subsection{Hypercube}
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/hypercube}
+\caption{Hypercube}
+\label{fig:hypercube}
+\end{figure}
+
+Mässige Skalierbarkeit. Bietet eine gute Bandbreite, da viele Kanten vorhanden sind. Latenz steigt logarithmisch mit Anzahl der Knoten. Abbildung\ref{fig:hypercube_impl} zeigt eine Implementierung einer Hypercube Struktur in Prozessoren.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/hypercube_impl}
+\caption{Hypercube Implementation}
+\label{fig:hypercube_impl}
+\end{figure}
+
+\subsection{Koppelnetze}
+\subsubsection{Crossbar Switch}
+Heute das beste und meist verwendeste Layout. Es ist nicht blockierend und verbindet eine Menge von Geräten untereinander. Wenn 2 Geräte (oder ein Prozessor und ein Speichermodul) Daten austauschen, kann das einen anderen Prozessor nicht beeinflussen, da zu jedem Zeitpunkt immer eine Route zum Speichergerät zur Verfügung steht. Abbildung \ref{fig:crossbar_switch} zeigt einen solchen Crossbar Switch. Der gezeigte Crossbar Switch verbindet zur Zeit gleichzeitig 3 CPUs und Memories, verbunden durch die geschlossenen Kreuzungspunkte. Das bedeutet auch, dass ein Crossbar Switch UMA ist, d.h. alle Speicherstellen können mit derselben Latenz angesprochen werden.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/crossbar_switch}
+\caption{(a) Ein 8x8 Crossbar Switch. (b) Ein offener Kreuzungspunkt. (c) Ein geschlossener Kreuzungspunkt.}
+\label{fig:crossbar_switch}
+\end{figure}
+
+Der Nachteil bei Crossbar Switches ist die mangelnde Skalierbarkeit, denn die Anzahl an Knoten wächst im Quadrat mit der Anzahl der zu verbindenden Elemente. Wenn z.B. 1'000 CPUs mit 1'000 Memory Modulen verbunden werden sollen, würde es eine Million Kreuzungspunkte benötigen, was nicht gerade effizient wäre.
+
+\subsubsection{Omega Netzwerk}
+Stellen wir uns einen simplen 2x2 Switch vor, mit zwei Eingängen und zwei Ausgängen, siehe Abbildung \ref{fig:omegaswitch}. Unser kleiner Switch erhält eine (hier vereinfachte) Nachricht bestehend aus 4 Elementen. Das \texttt{Module}-Feld, gibt an, welches Memory-Modul benützt werden soll. Das \texttt{Address}-Feld sagt, an welche Adresse sich die Nachricht richtet. Das \texttt{Opcode}-Feld bestimmt, ob es eine Lese- oder eine Schreiboperation ist und schlussendlich das \texttt{Value}-Feld welche Daten denn geschrieben werden sollen, wenn es eine Schreiboperation ist.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{"fig/omega switch"}
+\caption{(a) Ein 2x2 Switch. (b) Das Nachrichten Format}
+\label{fig:omegaswitch}
+\end{figure}
+
+Ein solch kleines Netzwerk bringt uns noch nicht weit, weswegen wir nun 8 Prozessoren und 8 Speicher nehmen. Wir können nun mittels 12 solcher einfacher Switches alle 8 CPUs mit allen 8 Memories verbinden, wie in Abbildung \ref{fig:omega_gross} gezeigt.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/omega_gross}
+\caption{Ein Omega Netzwerk mit 8 CPUs und 8 Speicher}
+\label{fig:omega_gross}
+\end{figure}
+Dieses gezeigte Netzwerk heisst nun ein Omega Netzwerk. Es verbindet via 3 Stufen die 8 CPUs mit den Memories. Wir können auch sagen, für $ n $ CPUs und Memories benötigen wir $ log_{2} n $ Stufen und total $ \frac{n}{2} log_{2}n $ Switches, was einiges besser als unser Crossbar Netzwerk ist, welches ja $ n^{2} $ Kreuzungspunkte benötigt.
+
+Der Nachteil ist allerdings, dass das Netzwerk blockierend ist. Wenn nun z.B. die 2 Prozessoren 000 und 100 gleichzeitig auf eine Memory Stelle zugreifen möchten, muss ein Prozessor warten, da sie via denselben Switch zugreifen müssen.
+\section{Applikationsskalierung}
+Gemeinsame Zustände in die Datenbank verlegen (oder auslagern). Skalierbare Algorithmen verwenden. Feil granulares Locking verwenden, Worker Thread Pools verwenden. Natürlich auch immer Skalierungs-Tests durchführen, sowie die Applikation im Betrieb beobachten und Orte identifizieren, wo gewartet werden muss, sei dies wegen locks oder falschen Algorithmen, etc.
 \section{Lernkontrolle}
 \subsection{Erklären Sie die superskalare Architektur}
 Der Prozessor legt mehrere Instruktionen auf unabhängige Funktionseinheiten.
@@ -36,24 +314,24 @@ Hauptsächlich bei der Fetch-Einheit wird die superskalere Architektur aufgeblä
 UMA = Unified Memory Access, einheitliche Zugriffszeit, zentraler Speicher
 NUMA = Non unified Memory Access, nicht-einheitliche Zugriffszeit, verteilter Speicher
 \subsection{Zeichnen Sie eine gemischte UMA/NUMA Architektur auf wo Memory lokal, sowie verteilt zum Prozessor ist}
-Mehrere Prozessoren mit je einem eigenen Memory. Die Prozessoren sind untereinander verbunden mit QPI.
-zusätzliche Fragen, z.B. was ist das für ein Netzwerk, wie kann der Prozessor dann verteiltes Memory erreichen, ...
+Mehrere Prozessoren mit je einem eigenen Memory. Die Prozessoren sind untereinander verbunden z.B. mit QPI.
+Zusätzliche Fragen, z.B. was ist das für ein Netzwerk, wie kann der Prozessor verteiltes Memory erreichen, ...
 \subsection{Was ist der Unterschied zwischen Multiprozessor und Multicomputer Systemen? Nennen Sie ein Beispiel}
 Aus wissenschaftlichem Standpunkt ähnlich, in Bezug auf Zugriffszeit auf das Memory.
 Bei Multiprozessorsystemen teilen sich die Prozessoren einen gemeinsamen Adressraum.
-Multicomputer haben lokalen Speicher mit separaten Adressraum und werden über ein Netz zusammengeschaltet, z.B. bei einem Grid.
+Multicomputer haben lokalen Speicher mit separaten Adressraum und werden über ein Netz zusammengeschaltet, z.B. ein Grid.
 \subsection{Wie werden Chip oder Multicore Architekturen wie wir sie heute verwenden genannt?}
 Chip Level Multithreading
 Setzt sich zusammen aus ; CMP = Chip Multiprocessing, Simultanious Multithreading = SMP 
-Gibt zusammen das heutige Chip Level Mu
-Wir können also Softwarehthreads in der Hardware abbilden mit diesen Instruktionspipelines.
+Gibt zusammen das heutige Chip Level Multithreading CMT.
 \subsection{Welches ist das (heute) bevorzugte Verbindungsnetz (das eigentlich gar keines ist)?}
 Ist ein Crossbar Switch. Ist keines im geometrischen Sinne.
 \subsection{Was zeichnet es aus?}
 Wieso ist der Crossbar Switch so beliebt?
 Ein Point 2 Point Netz ist ein Deadend, kann man nicht weiterverfolgen, nicht skalierbar. Also muss man andere Wege gehen -> Crossbar Switch.
 Man kann über eine bestimmte Anzahl Kanten einen beliebigen Core erreichen.
-Man kann jeden Knoten erreichen mit maximal 2 Hops - klar sie haben einen Aufwand, aber man kann dadurch garantieren dass jeder Knoten schnell erreichbar ist.
+Man kann jeden Knoten erreichen mit maximal 2 Hops - klar sie haben einen Aufwand, 
+man kann dafür garantieren dass jeder Knoten schnell erreichbar ist.
 \subsection{Ist ein Crossbarswitch Netz blockierend?}
 Nein es ist nicht blockierend, da es immer eine Alternativverbindung gibt. Die Verbindung ist offen für einen anderen Knoten denselben zu erreichen.
 \subsection{Ist ein Omega Netzwerk blockierend?}
@@ -61,15 +339,12 @@ Ja das Omega Netzwerk ist blockierend. Wenn von Punkt X zu Punkt Y eine Verbindu
 \subsection{Was ist der Hauptgrund wieso ein Multicore Chip mehrere Hardware Threads implementieren soll?}
 Wenn Memorystalls auftreten, kann der andere Thread rechnen.
 \subsection{Wie implementiert der Chiphersteller diese Hardware Threads?}
-Superskalara Architektur mit InstruktionPipelines
+Superskalare Architektur mit mehreren Instruktions Pipelines.
 \subsection{Wie werden SW Threads auf die verschiedenen Cores verteilt?}
 Das Betriebssystem / Der Scheduluer verteilt die SW Threads. Er verteilt CPU Time. Die kleinste Einheit, die ein Betriebssystem verteilen kann, sind Threads.
 \subsection{Welches Problem tritt bei Multicore Architekturen auf, das man bei Singlecore Architekturen mit einem L1 und L2 Cache nicht hatte?}
 Cachekoheränzprobleme. Daran arbeitet man zur Zeit sehr sehr fleissig.
 \subsection{Welche 2 Schreibstrategien gibt es bei Prozessorcaches?}
-Es gibt eine Menge von caches, nicht nur Prozessorcaches, z.B. gibt es auch den Memorycache (ist ein Cache vom Operating System, baut er sich selbst auf für MemoryZugriffe).
-
-2 Schreibstrategien
 - write through
 	Wird sofort zurück geschrieben.
 - write back
@@ -81,7 +356,6 @@ Es schaut, geht mit das was an, kommt das von meinem Speicher, es legt einen Tag
 
 Direcotry liegt z.T. im Memory, z.T. im Cache
 Verkettete Listen, jene Pointer die auf einen anderen Cache liegen.
-
 \subsection{Welche Einheiten sind beim Directory Protokoll beteiligt?}
 Hauptspeicher, da da beim Direcotry Protokoll verweise sind auf einen lokalen Cache.
 Lokaler Cache
