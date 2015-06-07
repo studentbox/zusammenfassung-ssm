@@ -212,8 +212,7 @@ Bei Daten, die von mehreren Prozessoren verwendet werden, gibt es jeweils nur ei
 Man möchte bei Verbindungen möglichst hohe Leistung haben. Das heisst, dass man viele Leitungen benötigt. Gleichzeitig möchte man niedrige Kosten, was heisst dass man nur wenig Leitungen einsetzen darf.
 
 \subsection{Lineares Feld}
-
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.7\linewidth]{fig/lineares_feld}
 \caption{Lineares Feld}
@@ -223,10 +222,9 @@ Man möchte bei Verbindungen möglichst hohe Leistung haben. Das heisst, dass ma
 Unendlich skalierbar (hardwaretechnisch gesehen), offensichtliche Limitierungen bei der Bandbreite und Latenz.
 
 \subsection{Ring}
-
-\begin{figure}
+\begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/ring}
+\includegraphics[width=0.2\linewidth]{fig/ring}
 \caption{Ring}
 \label{fig:ring}
 \end{figure}
@@ -234,11 +232,9 @@ Unendlich skalierbar (hardwaretechnisch gesehen), offensichtliche Limitierungen 
 Ebenfalls unbeschränkt skalierbar. Wenn in beide Richtungen traversierbar, ist die maximale Latenz die Hälfte aller Knoten.
 
 \subsection{Stern}
- 
-
-\begin{figure}
+ \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/stern}
+\includegraphics[width=0.2\linewidth]{fig/stern}
 \caption{Stern}
 \label{fig:stern}
 \end{figure}
@@ -246,10 +242,9 @@ Ebenfalls unbeschränkt skalierbar. Wenn in beide Richtungen traversierbar, ist 
 Alle Kommunikation läuft via das Zentrum des Sterns, daher nicht skalierbar. Dafür sehr grosse Bandbreite und niedrige Latenz.
 
 \subsection{Baum}
-
-\begin{figure}
+\begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/baum}
+\includegraphics[width=0.2\linewidth]{fig/baum}
 \caption{Baum}
 \label{fig:baum}
 \end{figure}
@@ -257,9 +252,9 @@ Alle Kommunikation läuft via das Zentrum des Sterns, daher nicht skalierbar. Da
 Der Baum ist sehr gut skalierbar und bietet eine ausgewogene Latenz. Dafür kann die Bandbreite eingeschränkt sein.
 
 \subsection{Hypercube}
-\begin{figure}
+\begin{figure}[h]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/hypercube}
+\includegraphics[width=0.2\linewidth]{fig/hypercube}
 \caption{Hypercube}
 \label{fig:hypercube}
 \end{figure}
@@ -267,7 +262,7 @@ Der Baum ist sehr gut skalierbar und bietet eine ausgewogene Latenz. Dafür kann
 Mässige Skalierbarkeit. Bietet eine gute Bandbreite, da viele Kanten vorhanden sind. Latenz steigt logarithmisch mit Anzahl der Knoten. Abbildung\ref{fig:hypercube_impl} zeigt eine Implementierung einer Hypercube Struktur in Prozessoren.
 
 \begin{figure}
-\centering
+\centering[h]
 \includegraphics[width=0.7\linewidth]{fig/hypercube_impl}
 \caption{Hypercube Implementation}
 \label{fig:hypercube_impl}
@@ -276,7 +271,7 @@ Mässige Skalierbarkeit. Bietet eine gute Bandbreite, da viele Kanten vorhanden 
 \subsection{Koppelnetze}
 \subsubsection{Crossbar Switch}
 Heute das beste und meist verwendeste Layout. Es ist nicht blockierend und verbindet eine Menge von Geräten untereinander. Wenn 2 Geräte (oder ein Prozessor und ein Speichermodul) Daten austauschen, kann das einen anderen Prozessor nicht beeinflussen, da zu jedem Zeitpunkt immer eine Route zum Speichergerät zur Verfügung steht. Abbildung \ref{fig:crossbar_switch} zeigt einen solchen Crossbar Switch. Der gezeigte Crossbar Switch verbindet zur Zeit gleichzeitig 3 CPUs und Memories, verbunden durch die geschlossenen Kreuzungspunkte. Das bedeutet auch, dass ein Crossbar Switch UMA ist, d.h. alle Speicherstellen können mit derselben Latenz angesprochen werden.
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.7\linewidth]{fig/crossbar_switch}
 \caption{(a) Ein 8x8 Crossbar Switch. (b) Ein offener Kreuzungspunkt. (c) Ein geschlossener Kreuzungspunkt.}
@@ -287,7 +282,7 @@ Der Nachteil bei Crossbar Switches ist die mangelnde Skalierbarkeit, denn die An
 
 \subsubsection{Omega Netzwerk}
 Stellen wir uns einen simplen 2x2 Switch vor, mit zwei Eingängen und zwei Ausgängen, siehe Abbildung \ref{fig:omegaswitch}. Unser kleiner Switch erhält eine (hier vereinfachte) Nachricht bestehend aus 4 Elementen. Das \texttt{Module}-Feld, gibt an, welches Memory-Modul benützt werden soll. Das \texttt{Address}-Feld sagt, an welche Adresse sich die Nachricht richtet. Das \texttt{Opcode}-Feld bestimmt, ob es eine Lese- oder eine Schreiboperation ist und schlussendlich das \texttt{Value}-Feld welche Daten denn geschrieben werden sollen, wenn es eine Schreiboperation ist.
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.7\linewidth]{fig/omega_switch}
 \caption{(a) Ein 2x2 Switch. (b) Das Nachrichten Format}
@@ -295,13 +290,13 @@ Stellen wir uns einen simplen 2x2 Switch vor, mit zwei Eingängen und zwei Ausg�
 \end{figure}
 
 Ein solch kleines Netzwerk bringt uns noch nicht weit, weswegen wir nun 8 Prozessoren und 8 Speicher nehmen. Wir können nun mittels 12 solcher einfacher Switches alle 8 CPUs mit allen 8 Memories verbinden, wie in Abbildung \ref{fig:omega_gross} gezeigt.
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.7\linewidth]{fig/omega_gross}
 \caption{Ein Omega Netzwerk mit 8 CPUs und 8 Speicher}
 \label{fig:omega_gross}
 \end{figure}
-Dieses gezeigte Netzwerk heisst nun ein Omega Netzwerk. Es verbindet via 3 Stufen die 8 CPUs mit den Memories. Wir können auch sagen, für $ n $ CPUs und Memories benötigen wir $ log_{2} n $ Stufen und total $ \frac{n}{2} log_{2}n $ Switches, was einiges besser als unser Crossbar Netzwerk ist, welches ja $ n^{2} $ Kreuzungspunkte benötigt.
+Dieses gezeigte Netzwerk wird \textbf{Omega Netzwerk} genannt. Es verbindet via 3 Stufen die 8 CPUs mit den Memories. Wir können auch sagen, für $ n $ CPUs und Memories benötigen wir $ log_{2} n $ Stufen und total $ \frac{n}{2} log_{2}n $ Switches, was einiges besser als unser Crossbar Netzwerk ist, welches ja $ n^{2} $ Kreuzungspunkte benötigt.
 
 Der Nachteil ist allerdings, dass das Netzwerk blockierend ist. Wenn nun z.B. die 2 Prozessoren 000 und 100 gleichzeitig auf eine Memory Stelle zugreifen möchten, muss ein Prozessor warten, da sie via denselben Switch zugreifen müssen.
 \section{Applikationsskalierung}
