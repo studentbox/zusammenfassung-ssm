@@ -98,3 +98,135 @@ Das VFS ist eine Abstraktion des zugrundeliegenden Filesystems und bietet eine e
 Das ZFS ist in einer Baumstruktur (Merkle Tree) aufgebaut. Der Wurzelknoten wird \emph{Uberblock} genannt. Die Knoten zwischen dem \emph{Uberblock} und den Blättern enthalten Block Pointers. Block Pointer enthalten \emph{Data Virtual Addresses} zu anderen Blöcken und zusätzlich auch den Hash von seinen Kind Knoten. Die Blätter des Baumes enthalten dann die eigentlichen Daten.
 
 \section{Speichernetze \& Protokolle}
+
+\subsection{Sie wissen wie ein Storage Area Network aufgebaut ist.}
+
+Zurzeit sind folgende Speicherprotokolle weit verbreitet:
+\begin{description}
+	\item[SCSI:] altes \emph{Small Computer Serial Interface}
+	\item[SAS:] neues \emph{Serial Attached SCSI} (abwärtskompatibel zu SATA)
+	\item[SATA:] für billig Produkte, hat Limitationen
+\end{description}
+In einem SAN müssen die Befehle eines dieser Speicherprotokolle über das Netzwerk übertragen werde. Bekannte Transportprotokolle sind:
+\begin{description}
+	\item[Fibre Channel:] Überträgt SCSI-Befehle
+	\item[TCP/IP:] Überträgt SCSI-Befehle über TCP (wird meist in KMU's verwendet)
+\end{description}
+Die SCSI-Kommandos werden in folgende vier Kategorien eingeteilt:
+\begin{description}
+	\item[N] non-data
+	\item[W] Schreiben der Daten vom Initiator zum Target
+	\item[R] Lesen der Daten
+	\item[B] Bidirektional
+\end{description}
+Abbildung \ref{fig:scsi-read} zeigt ein Beispiel für den Read Befehl von SCSI. Dabei sind folgende Elemente interessant:
+\begin{description}
+	\item[Operation Code:] Der Hexcode 08 steht für den Read Befehl
+	\item[Logical Unit Number (LUN):] Die LUN ist eine Nummer um eine durch das SCSI Protokoll adressierte logische Diskeinheit zu identifizieren. Eine LUN wird für jegliche Geräte verwendet, egal ob Tapes oder virtuelle Volumes.
+	\item[Logical Block Address (LBA):] Die LBA ist die Startadresse von welcher man einen Block lesen möchte.
+	\item[Transfer Length:] Die Transfer Length gibt die Anzahl der Blöcke an, die man lesen möchte.
+\end{description}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/scsi-read}
+\caption{SCSI Read Befehl}
+\label{fig:scsi-read}
+\end{figure}
+
+Abbildung \ref{fig:fc-topologien} zeigt eine Überblick über die verschiedenen Fibre Channel Topologien. Von den drei Topologien hat sich nur die Fabric Topologie durchgesetzt. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{fig/fc-point-to-point}
+		\caption{Point to Point}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{fig/fc-loop}
+		\caption{Loop}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{fig/fc-fabric}
+		\caption{Fabric}
+	\end{subfigure}
+	\caption{Fibre Channel Topologien}\label{fig:fc-topologien}
+\end{figure}
+
+Bei der Fabric Topologie werden die Server und die Storage Subsysteme an einen Fibre Channel Switch angeschlossen. Fibre Channel mit einer Fabric Topologie umgesetzt bietet folgende Vorteile:
+\begin{itemize}
+	\item Mehrzweck-Netzwerk möglich um Speichergeräte, Video Streaming und Cluster Server zu verbinden.
+	\item Transportiert Protokolle (SCSI, IP usw.) von einer höheren Ebene (yet-another-new-protocol).
+	\item Hochgeschwindigkeiten von bis zu 16 Gbit/sec (2015).
+	\item Kollisionsfreie Übertragung.
+	\item Reichweite von bis zu 10 km (mit Extender mehr möglich für Disaster Recovery).
+	\item Fortschrittliches System der Fluss Kontrolle.
+	\item Unterstützt Heterogene Systeme (Linux, Solaris, Vmware, Citrix usw.)
+\end{itemize}
+Eine SAN Fabric besteht aus folgenden Hardware-Komponenten:
+\begin{description}
+	\item[Host Bus Adapter:] Der Host Bus Adapter stellt die Schnittstelle zwischen dem internen Server-Bus (z.B. PCIe) und dem FC Netzwerk zur Verfügung.
+	\item[Verbindungskabel:] Als Verbindungskabel können Kupfer- oder Glasfaserkabel verwendet werden.
+	\item[GBIC (Gigabit Interface Converters):] Dieser Adapter können im Host Bus Adapter oder im Fibre Channel Switch eingesetzt werden und stellen die Medien-Schnittstelle (Kupfer zu Glas) bereit.
+	\item[SFP (Small Form Factor Pluggable):] Die SFPs sind eine Weiterentwicklung der GBIC und unterscheiden sich vor allem in ihrer kompakteren Bauweise.
+	\item[Fibre Channel Switch:] Leiten die Datenpakete mit einem Cut-Through Routing weiter (ohne Zwischenspeichern). Dadurch kann ein FC Switch ein Frame in 2-4 Mikrosekunden verarbeiten.
+	\item[Storage Subsystem:] Das Storage Subsystem stellt den Speicher in verschiedener Form (SSD, Tape usw.) bereit.
+\end{description}
+
+\subsection{Sie kennen das FC Protokoll und dessen Eigenschaften.}
+
+Jedes Gerät im FC Netzwerk besitzt einen 64 bit langen \emph{Node Name}. Jeder Port an diesem Gerät besitzt zudem einen 64 bit langen \emph{Port Name}. Für das Routing wird zusätzlich pro Port eine 24 bit lange \emph{N\_Port ID} als Adresse verwendet.
+Das FC Protokoll besteht aus 5 Layer welche nachfolgend genauer beschrieben sind:
+\begin{description}
+	\item[FC-4 (Protocol Mapping Layer):] Im Protocol Mapping Layer werden Anwendungsprotokolle, wie z.B. SCSI oder IP in eine Protocol Data Unit verpackt, damit diese über den FC-2 Layer zugestellt werden kann.
+	\item[FC-3 (Common Services Layer):] Im Common Services Layer können erweiterte Funktionen wie beispielsweise RAID-Absicherung oder Verschlüsselung implementiert werden.
+	\item[FC-2 (Network Layer):] Der Network Layer stellt den eigentlichen Kern des FC-Protokolls dar.
+	\item[FC-1 (Data Link Layer):] Im Data Link Layer ist die Umsetzung der Daten in Leitungssignale implementiert.
+	\item[FC-0 (Physical):] Der Physical Layer, der die Verkabelung, Stecker und Steckertypen usw. definiert.
+\end{description}
+Um einer grossen Anzahl von Ansprüchen in der Kommunikation gerecht zu werden, definiert FC mehrere Service Klassen im FC-2 Layer. Abbildung \ref{fig:fc-service-classes} gibt einen Überblick über alle Klassen. 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{fig/fc-service-classes}
+\caption{Fibre Channel Service Klassen}
+\label{fig:fc-service-classes}
+\end{figure}
+
+Fibre Channel definiert verschiedenen Port Typen. Bei einem Gerät (Server, Storage usw.) gibt es folgende zwei Ports:
+\begin{description}
+	\item[N\_PORT:] Das Gerät ist direkt mit einem Switch verbunden.
+	\item[NL\_PORT:] Das Gerät ist in einer Loop Topologie verbunden.
+\end{description}
+Bei einem Switch werden folgende Ports definiert:
+\begin{description}
+	\item[U\_Port:] Universal Port (verwendet für automatische Port Erkennung).
+	\item[G\_Port:] Generic Port kann als E- oder F-Port verwendet werden.
+	\item[F\_Port:] Fabric Port um mit einem Gerät direkt zu verbinden.
+	\item[FL\_Port:] Fabric Loop Port um mit einer Loop Topologie zu verbinden.
+	\item[E\_Port:] Expansion Port um zwei Switches zu verbinden.
+	\item[EX\_Port:] Routed E\_Port
+	\item[M\_Port:] Mirrored Port
+	\item[D\_Port:] Diagnostics Port
+\end{description}
+
+\subsubsection{FC Name Server}
+
+In der FC Spezifikation ist auch ein Name Server (ähnlich DNS-Server) spezifiziert. Er verwaltet die Directory Informationen von den Fabric Member Devices. Jedes Gerät muss im Netzwerk registriert sein und kann Ressource Informationen beim Name Server erhalten.
+
+\subsubsection{Virtualisierung im SAN}
+
+Bei der Virtualisierung eines SAN gibt es das Akronym vSAN welches leider von der Firma VMware und Cisco für etwas völlig unterschiedliches verwendet wird. VMware vSAN ist eine Software Defined Storage Lösung mit welcher sich verteilte Speicher mit einem Hypervisor realisieren lassen. 
+Das Cisco vSAN ist eine Technologie um FC Port zu gruppieren (ähnlich VLAN im Ethernet). Mit dem Cisco vSAN lassen sich sogenannte Zonen einrichten, um das FC Netzwerk in kleinere Untergruppen zu unterteilen. Beim Zoning wird zwischen Hard-  und Soft Zoning unterschieden. Beim Soft Zoning werden lediglich die Name Server Anfragen unterdrückt welche ein Gerät nicht sehen sollte. Weiss das Gerät aber die Adresse eines Gerätes in einer anderen Zone kann es trotzdem darauf zugreifen. Beim Hard Zoning werden die Geräte über das Protokoll getrennt und ein Zugriff auf eine andere Zone ist nicht möglich. Diese Variante ist sicherer aber man benötigt dafür spezielle Hardware. Durch ein Logical Unit Number Masking (LUN Masking) lässt sich die LUN eines Gerätes nur bestimmten anderen Geräten zur Verfügung stellen. Das LUN Masking wird meistens im Host Storage Controller implementiert.
+Eine weitere Technologie ist das \emph{Thin Provisioning} (overcommitment). Thin Provisioning kann man vergleichen mit dem von einem Elektrizitätswerk zur Verfügung gestelltem Strom. Dieses garantiert dem Kunden eine maximale Leistung, die dieser beziehen kann. Trotzdem kann das E-Werk nur einen Teil dieser Maximalleistung allen Kunden gleichzeitig bereitstellen. Da aber niemals alle gleichzeitig die Maximalleistung beziehen, kommt es zu keinen Problemen. Sollte das Speichersystem nicht mehr in der Lage sein die gemachten
+Reservationen einzuhalten, wird der SysAdmin aufgefordert (zB bei 80\% Füllgrad) neue zusätzliche Platten ins Speichersystem zu geben.
+
+\subsection{Sie können eine Scale-Out Architektur beschreiben.}
+
+Bei einer Scale-Out Architektur wird die Infrastruktur durch Hinzufügen von gleichartigen Servern erweitert. Das Gegenstück ist die Scale-Up Architektur welche einzelne Server aufrüstet. Weil die Daten in einer Scale-Out Architektur auf verschiedenen Server gespeichert werden, muss man sogenannte Objekt Speicher verwenden. Objekt Speicher verwenden für jedes Objekt eine einzigartige ID, anstatt den FS Pfad. Das erlaubt einen Zugriff auf die Daten ohne den Server zu kennen auf dem das Objekt liegt, oder sogar ohne das Datacenter zu kennen das den Server betreibt. Zusätzlich können einem Objekt Metadaten angehängt werden um z.B. ACL oder Tags für Bilder mit dem Objekt zu speichern.
+
+\subsection{Sie können das Erlernte auf das Design eines einfachen Datacenters anwenden.}
+
+Klar! (Joho flick mol dis Enterprise-Lab!)
