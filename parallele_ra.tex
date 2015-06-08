@@ -289,8 +289,25 @@ Der Nachteil bei Crossbar Switches ist die mangelnde Skalierbarkeit, denn die An
 \newpage
 
 \subsubsection{Omega Netzwerk}
+Stellen wir uns einen simplen 2x2 Switch vor, mit zwei Eingängen und zwei Ausgängen, siehe Abbildung \ref{fig:omegaswitch}. Unser kleiner Switch erhält eine (hier vereinfachte) Nachricht bestehend aus 4 Elementen. Das \texttt{Module}-Feld, gibt an, welches Memory-Modul benützt werden soll. Das \texttt{Address}-Feld sagt, an welche Adresse sich die Nachricht richtet. Das \texttt{Opcode}-Feld bestimmt, ob es eine Lese- oder eine Schreiboperation ist und schlussendlich das \texttt{Value}-Feld welche Daten denn geschrieben werden sollen, wenn es eine Schreiboperation ist.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{fig/omega_switch}
+	\caption{(a) Ein 2x2 Switch. (b) Das Nachrichten Format}
+	\label{fig:omegaswitch}
+	\end{figure}
 
-Das Omega Netzwerk eignet sich im Gegensatz zu dem Crossbar Switch für den Einsatz in wirklich grossen Anlagen, da deutlich weniger Schalter verbaut werden müssen. Die Schalter sind in mehreren vertikalen Schichten angeordnet. In einem solchen Netz mit n Prozessoren gibt es $\log_2(n)$ Schichten mit genau $\frac{n}{2}$ Schaltern. Daraus folgt, dass die Gesamtanzahl der Schalter  $\log_2(n) \cdot \frac{n}{2}$ beträgt. Bei 8 Prozessoren werden also nicht 64 Leitungen wie beim Crossbar Switch benoetigt, sondern nur 12.
+Ein solch kleines Netzwerk bringt uns noch nicht weit, weswegen wir nun 8 Prozessoren und 8 Speicher nehmen. Wir können nun mittels 12 solcher einfacher Switches alle 8 CPUs mit allen 8 Memories verbinden, wie in Abbildung \ref{fig:omega_gross} gezeigt.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{fig/omega_gross}
+	\caption{Ein Omega Netzwerk mit 8 CPUs und 8 Speicher}
+	\label{fig:omega_gross}
+	\end{figure}
+Dieses gezeigte Netzwerk wird \textbf{Omega Netzwerk} genannt. Es verbindet via 3 Stufen die 8 CPUs mit den Memories. Wir können auch sagen, für $ n $ CPUs und Memories benötigen wir $ log_{2}\ (n) $ Stufen und total $ \frac{n}{2}\ log_{2}\ (n) $ Switches, was einiges besser als das Crossbar Netzwerk ist, welches ja $ n^{2} $ Kreuzungspunkte benötigt.
 
+Im Beispiel mit den 8 Prozessoren werden daher nicht 64 Kreuzungspunkte wie beim Crossbar Switch benötigt, sondern nur 12 Switches.
+
+Der Nachteil vom Omega Netzwerk ist, dass es blockierend ist. Wenn nun z.B. die 2 Prozessoren 000 und 100 gleichzeitig auf eine Memory Stelle zugreifen möchten, muss ein Prozessor warten, da sie via denselben Switch zugreifen müssen.
 \section{Applikationsskalierung}
 Gemeinsame Zustände in die Datenbank verlegen (oder auslagern). Skalierbare Algorithmen verwenden. Fein granulares Locking verwenden, Worker Thread Pools verwenden. Natürlich auch immer Skalierungs-Tests durchführen, sowie die Applikation im Betrieb beobachten und Orte identifizieren, wo gewartet werden muss, sei dies wegen locks oder falschen Algorithmen, etc.
