@@ -6,10 +6,11 @@
 Überwachung der IT Services und erkennen der Fehlerzustände. 
 
 \begin{itemize}
-	\item Zeigt den Zustand aller Hardwaresysteme und Applikationen des gemonitorten IT Service an.
+	\item Zeigt den Zustand aller Hardwaresysteme und Applikationen des überwachten IT Service an.
 	\item Liefert Informationen zur präventiven Erkennungen möglicher Störungen.
 	\item Konfiguriert Instrumente zur automatischen Überwachung, Steuerung von Systemen und zur Vermeidung von Störungen.
 	\item Beinhaltet auch die automatische Behebung von Störungen mittels Scripts (Automation).
+	\item Herausforderung: Nur echte Fehler melden und diese nur einmal
 \end{itemize}
 
 \begin{figure}[h!]
@@ -21,27 +22,16 @@
 
 \begin{description}
 	\item[Monitored Object] Objekt das unter Beobachtung steht. Dies kann ein Prozess, eine Disk, die Memory, etc. sein.
-	\item[Messpunkt] Pro monitored Object gibt es mind. 1 oder mehrere Messpunkte. Konkrete Charakteristika eines monitored object. Bsp: Füllgrad bei Disk, Lesezeit bei Disk.
+	\item[Messpunkt] Pro \emph{Monitored Object} gibt es mind. 1 oder mehrere Messpunkte. Konkrete Charakteristika eines monitored object. Bsp: Füllgrad bei Disk, Lesezeit bei Disk.
 \end{description}
 
 \paragraph{Event-Management}
-Bei einem Event handelt es sich um ein für die Services relevantes Ereignis. Eine in der unvorhergesehene Statusänderung eines oder mehrerer Configuration Items. Typischerweise ist dies eine Benachrichtigung, welches ein Service, ein Configuration Item oder ein Monitoring Tool generiert. Diese Events sind oft kategorisiert, bspw. Info, Warning, Exception. Im Event steht immer die Quelle und die Beschreibung des Zustandes.
-
-Auf ein Event muss oft ein IT Mitarbeiter reagieren. 
-
-Das Ziel im Event-Management ist es, diese Events zu entdecken, zu verstehen und angemessen zu handeln.
-
+Bei einem Event handelt es sich um ein für die Services relevantes Ereignis. Eine in der unvorhergesehene Statusänderung eines oder mehrerer Configuration Items. Typischerweise ist dies eine Benachrichtigung, welches ein Service, ein Configuration Item oder ein Monitoring Tool generiert. Diese Events sind oft kategorisiert, bspw. Info, Warning, Exception. Im Event steht immer die Quelle und die Beschreibung des Zustandes. Auf ein Event muss oft ein IT Mitarbeiter reagieren. Das Ziel im Event-Management ist es, diese Events zu entdecken, zu verstehen und angemessen zu handeln.
 In grossen Infrastrukturen gibt es unzählige Events. Im Event-Management geht es auch darum, die wichtigen Events zu filtern, zu verknüpfen und anzureichern. Damit die IT Operatoren damit gut arbeiten können.
 
 \section{Sie können die wichtigsten Funktionen eines Monitoring-Tools am Beispiel von NAGIOS erläutern}
 
-NAGIOS ist OpenSource und bietet unzählige Monitoring Möglichkeiten. Windows, Linux/UNIX, Routers, Switches, Firewalls, Drucker, Services, Applikationen.
-
-Benachrichtigungsmöglichkeiten über E-Mail, SMS und Web-Interface. Man kann Event-Handlers definieren - Reaktionen nach Problemerkennung - z.B. Neustart eines Webservers.
-
-Reporting Options. SLA availability repots, alert and notifcation reports und weitere.
-
-Multi-user, Skalierbar (bis zu 100 000 überwachende Nodes), bewährt, Failover protection, grosse Community.
+NAGIOS ist OpenSource und bietet unzählige Monitoring Möglichkeiten. Windows, Linux/UNIX, Routers, Switches, Firewalls, Drucker, Services, Applikationen. Benachrichtigungsmöglichkeiten über E-Mail, SMS und Web-Interface. Man kann Event-Handlers definieren - Reaktionen nach Problemerkennung - z.B. Neustart eines Webservers. Reporting Options. SLA availability repots, alert and notifcation reports und weitere. Multi-user, Skalierbar (bis zu 100 000 überwachende Nodes), bewährt, Failover protection, grosse Community.
 
 \paragraph{Arten der Überwachung}
 \begin{description}
