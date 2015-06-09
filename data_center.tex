@@ -26,7 +26,7 @@ Downtime kostet, je nach Branche, extrem viel Geld. Das schlimmste wäre allerdi
 \subsection{Aktive vs. inaktive Daten}
 Daten sind inaktiv, wenn sie nicht benutzt / gelesen werden und trotzdem gespeichert werden. Diese müssen genau wie aktive Daten gepflegt, archiviert, gesichert etc. werden.
 Der Anteil an inaktiven Daten beträgt gegen 40\%. Da die Daten immer weiter wachsen, wächst auch der Anteil an inaktiven Daten mit. Teilweise kann man sich von den inaktiven Daten nicht entledigen. Beispielsweise kann es rechtliche Gründe haben wie das bei einer Krankenversicherung der Fall ist. Das Gesetz schreibt genau vor, wie lang welche Daten gespeichert werden müssen.
-Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringert werden. Dabei könnte man definieren, dass Daten nach einer gewissen Zeit ohne Zugriff automatisch gelöscht. Aber Achtung: Dies passt nicht zur Philosophie von Big Data (möglichst alles speichern und für immer).
+Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringert werden. Dabei könnte man definieren, dass Daten nach einer gewissen Zeit ohne Zugriff automatisch gelöscht werden. Aber Achtung: Dies passt nicht zur Philosophie von Big Data (möglichst alles speichern und für immer).
 
 \subsection{Datenklassen}\label{sec:datenklassen}
 \begin{itemize}
@@ -39,7 +39,7 @@ Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringe
 	\item \textbf{Offline Data} \\
 	Daten auf welche nicht direkten Zugriff erwartet wird. z.B. E-Mail Archivierung für Compliance. (u.a. Tape)
 \end{itemize}
-\begin{figure}
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.9\linewidth]{fig/sla}
 	\caption{Beispiele für SLAs}
@@ -47,7 +47,8 @@ Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringe
 \end{figure}
 \section{Sie sind in der Lage Data-Tiers und deren Aufgaben zu erklären}
 \subsection{Tiers vs Layer}
-In der Softwareentwicklung sind Layers typischerweise logisch zu verstehen, beispielsweise hat man ein View-Layer, ein Business-Layer und ein Persistenz-Layer. Tiers dagegen sind das physische Äquivalent zu den logischen Layers. Dabei hat man z.B. eine Trennung von einem Webserver, eine, Applikationsserver und einem DB Server (u.a. auch Aspekte wie Load-Balancing). Bei den Layers spricht von der Horizontalen Ansicht und den Tiers von der vertikalen.
+In der Softwareentwicklung sind Layers typischerweise logisch zu verstehen, beispielsweise hat man ein View-Layer, ein Business-Layer und ein Persistenz-Layer. Tiers dagegen sind das physische Äquivalent zu den logischen Layers. Dabei hat man z.B. eine Trennung von einem Webserver, eine, Applikationsserver und einem DB Server (u.a. auch Aspekte wie Load-Balancing). Bei den Layers spricht von der horizontalen Ansicht und bei den Tiers von der vertikalen.
+
 \subsection{Storage Tiers}\label{sec:storagetier}
 \begin{itemize}
 	\item \textbf{Tier 1}
@@ -55,7 +56,7 @@ In der Softwareentwicklung sind Layers typischerweise logisch zu verstehen, beis
 		\subitem 20\% aller Daten 
 		\subitem SSDs oder FC/SAS Platten
 	\item \textbf{Tier 2}
-		\subitem Mittlerer Speed, okay zuverlässig, limiert skalierbar, nicht so teuer. Wird von Business Critical Data verwendet.
+		\subitem Mittlerer Speed, okay zuverlässig, limitiert skalierbar, nicht so teuer. Wird von Business Critical Data verwendet.
 		\subitem FC/SAS Platten
 	\item \textbf{Tier n}
 		\subitem Hohe Kapazität, allerdings niedriger Speed, sehr günstig. Könnte als Nearline-Storage verwendet werden (d.h. E-Mail)
@@ -66,13 +67,15 @@ In der Softwareentwicklung sind Layers typischerweise logisch zu verstehen, beis
 		\subitem Einmal Beschreibbare Medien (für Compliance) (30\% aller Daten)
 		\subitem Tape oder MAID
 \end{itemize}
-Tape Archivierung ist immer noch das billigste Archiv-Medium und der vielseitigste Archivierungs-Speicher den es gibt. Allerdings ist Archivierung nicht ein Backup!
-\begin{figure}
+Tape Archivierung ist immer noch das billigste Archiv-Medium und der vielseitigste Archivierungs-Speicher den es gibt. Allerdings ist Archivierung kein Backup!
+
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.9\linewidth]{fig/speichertypen}
 	\caption{Übersicht Speichertypen}
 	\label{fig:speichertypen}
 \end{figure}
+
 \subsection{MAID}\label{sec:maid}
 Meint \emph{Massive Array of Idle Disks}. Wird eingesetzt bei Archivierungslösungen, bei denen auf Festplatten archiviert wird. Daher wird nicht häufig auf diese zugegriffen, was bedeutet, dass diese auch abgeschaltet werden können und bei Bedarf wieder hochgefahren werden können. Das bedeutet Stromersparnis - wichtig bei Green IT.
 
@@ -107,7 +110,7 @@ Wenn man die Qualität verbessern will, muss man auch die Verfügbarkeit erhöhe
 	\item Failover Datacenter \\ 
 		Das gesamte Datacenter ist gespiegelt vorhanden. Schwierig zu realisieren, da alles doppelt vorhanden sein muss - entsprechend teuer.
 \end{itemize}
-Ein Echtzeit-Switch zwischen Aktiv- und Failoverdatacenter ist nie möglich, da durch die Übertragungszeit immer eine Latenz im Spiel ist und daher die entfernte Datenbank im Grunde genommen immer Inkonsistent ist.
+Ein Echtzeit-Switch zwischen Aktiv- und Failoverdatacenter ist nie möglich, da durch die Übertragungszeit immer eine Latenz im Spiel ist und daher die entfernte Datenbank im Grunde genommen immer inkonsistent ist.
 \section{Kontrollfragen}
 \subsection{Wie würden Sie die Daten charakterisieren um eine sinnvolle Tiered-Storage Architektur aufbauen zu können?}
 Siehe Abschnitt \ref{sec:datenklassen}.
