@@ -108,23 +108,3 @@ Wenn man die Qualität verbessern will, muss man auch die Verfügbarkeit erhöhe
 		Das gesamte Datacenter ist gespiegelt vorhanden. Schwierig zu realisieren, da alles doppelt vorhanden sein muss - entsprechend teuer.
 \end{itemize}
 Ein Echtzeit-Switch zwischen Aktiv- und Failoverdatacenter ist nie möglich, da durch die Übertragungszeit immer eine Latenz im Spiel ist und daher die entfernte Datenbank im Grunde genommen immer Inkonsistent ist.
-\section{Kontrollfragen}
-\subsection{Wie würden Sie die Daten charakterisieren um eine sinnvolle Tiered-Storage Architektur aufbauen zu können?}
-Siehe Abschnitt \ref{sec:datenklassen}.
-\subsection{Teilen Sie Ihre zuvor gemachten Datencharakteristiken einem Datentier zu}
-Siehe Abschnitt \ref{sec:storagetier}.
-\subsection{Welche Plattenqualität würden Sie wo einsetzen? (im obigen Beispiel?)}
-Siehe Abschnitt \ref{sec:storagetier}.
-\subsection{Was ist MAID und wie funktioniert es?}
-Siehe Abschnitt \ref{sec:maid}.
-\subsection{Was sind inaktive Daten und wieso löscht man diese nicht einfach?}
-\subsection{Erklären Sie die Begriffe:}
-\begin{itemize}
-	\item \textbf{allocation} \\
-	\item \textbf{utilization efficiency} \\
-	\item \textbf{storage yield} \\
-	\item \textbf{COPQ} \\
-\end{itemize}
-Siehe Abschnitt \ref{sec:speichereffizienz}.
-\subsection{Wie sieht ein Failover Datacenter aus? Auf welche Arten kann man Daten replizieren?}
-Siehe Abschnitte \ref{sec:bsp_redundanz} und \ref{sec:replikationsarten}.
