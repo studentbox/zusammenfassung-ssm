@@ -111,7 +111,7 @@ Wenn man nun mehrere Prozessoren auf demselben Chip hat und zusätzlich noch Mul
 \section{Klassifikation nach Flynn}
 \begin{figure}
 \centering
-\includegraphics[width=0.7\linewidth]{fig/flynn}
+\includegraphics[width=0.5\linewidth]{fig/flynn}
 \caption{}
 \label{fig:flynn}
 \end{figure}
@@ -137,18 +137,18 @@ Prozessoren haben sonst nur Zugriff auf ihren eigenen Speicher.
 
 \subsubsection{UMA - Uniform Memory Access}
 Hier ist die Speicherzugriffszeit gleich (uniform) für alle Adressen. Dabei wird üblicherweise ein gemeinsamer, zentraler Speicher eingesetzt.
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/uma}
+\includegraphics[width=0.5\linewidth]{fig/uma}
 \caption{UMA Architektur}
 \label{fig:uma}
 \end{figure}
 
 \subsubsection{NUMA - Non-Uniform Memory Access}
 Die Zugriffszeit ist nicht für alle Speicherbereiche gleich, weil der Speicher verteilt ist.
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/numa}
+\includegraphics[width=0.5\linewidth]{fig/numa}
 \caption{NUMA Architektur}
 \label{fig:numa}
 \end{figure}
@@ -164,9 +164,9 @@ Relative\ Rechenzeit\ T = a + \frac{1-a}{n}
 \end{equation}
 $ a $ ist dabei der nicht parallelisierbare Anteil. Ein Programm auf einem Prozessor ($ n $) benötigt daher eine Rechenzeit von 1. Mit 2 Prozessoren sind es nur noch 0.6, mit 10 0.28 und mit 100 0.202. Es ist klar, dass der Wert daher gegen 0.2 konvergiert.
 Abbildung \ref{fig:amdahl} soll dies verdeutlichen.
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/amdahl}
+\includegraphics[width=0.5\linewidth]{fig/amdahl}
 \caption{Amdahls Gesetz}
 \label{fig:amdahl}
 \end{figure}
@@ -189,10 +189,10 @@ Das Problem bei beiden Verfahren ist, dass andere Prozessoren von der Variable a
 \subsubsection{Snoopy}
 Da ja alle Zugriffe über einen gemeinsamen Bus oder Switch laufen, können alle Prozessoren den Bus beobachten und erkennen, welche Blöcke wo von wem gespeichert sind. Dies skaliert allerdings nicht sonderlich gut (mehr als 64 Prozessoren liegen da nicht drin), da der Bus zu wenig Bandbreite besitzt.
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/snoopy}
-\caption{Snoopy Cachekohärenzprotokoll}
+\includegraphics[width=0.5\linewidth]{fig/snoopy}
+\caption{Snoopy Protokoll}
 \label{fig:snoopy}
 \end{figure}
 
@@ -203,7 +203,7 @@ Eine zentrale Liste mit allen Cache Blöcken darin. Zusätzlich wird notiert, we
 
 Wenn wir nun eine Architektur haben, bei denen mehrere Prozessoren involviert sind und diese je ein eigenes Memory haben, hat jeder Prozessor dazu noch sein eigenes Cache Directory, in dem Informationen über die Blöcke in diesem Speicher notiert sind.
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.7\linewidth]{fig/directory_protocol}
 \caption{Directory Protokoll}
