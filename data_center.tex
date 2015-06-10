@@ -1,5 +1,7 @@
 \chapter{Data Center}
+
 \section{Sie kennen die Building Blocks eines Datacenters}
+
 \subsection{Fiber}
 \begin{itemize}
 	\item \textbf{Single-mode fiber}\\
@@ -7,6 +9,7 @@
 	\item \textbf{Multimode fiber}\\
 	Für kurze Strecken eingsetzt (On Campus, bis 500m Länge) und niedrigere Übertragungsraten (10Gbit/s). Der Lichtimpuls wird durch eine LED erzeugt. Günstiger.
 \end{itemize}
+
 \subsection{Downtime}
 Downtime kostet, je nach Branche, extrem viel Geld. Das schlimmste wäre allerdings permanenter Datenverlust. Wenn nach einer Katastrophe wie 9/11 die Daten nicht innerhalb von 2 Wochen rekonstruiert sind, stirbt die Firma.
 \begin{table}[h]
@@ -22,13 +25,16 @@ Downtime kostet, je nach Branche, extrem viel Geld. Das schlimmste wäre allerdi
 		\end{tabular}
 		\end{table}
 		99.9999\% sind von Firmen wie Google/Facebook/... erreicht.
+
 \section{Sie wissen wie man Daten klassifiziert und sie in SLAs einbindet}
+
 \subsection{Aktive vs. inaktive Daten}
 Daten sind inaktiv, wenn sie nicht benutzt / gelesen werden und trotzdem gespeichert werden. Diese müssen genau wie aktive Daten gepflegt, archiviert, gesichert etc. werden.
 Der Anteil an inaktiven Daten beträgt gegen 40\%. Da die Daten immer weiter wachsen, wächst auch der Anteil an inaktiven Daten mit. Teilweise kann man sich von den inaktiven Daten nicht entledigen. Beispielsweise kann es rechtliche Gründe haben wie das bei einer Krankenversicherung der Fall ist. Das Gesetz schreibt genau vor, wie lang welche Daten gespeichert werden müssen.
 Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringert werden. Dabei könnte man definieren, dass Daten nach einer gewissen Zeit ohne Zugriff automatisch gelöscht werden. Aber Achtung: Dies passt nicht zur Philosophie von Big Data (möglichst alles speichern und für immer).
 
 \subsection{Datenklassen}\label{sec:datenklassen}
+
 \begin{itemize}
 	\item \textbf{Mission Critical Data} \\
 	Muss schnell sein, hochverfügbar, redundant usw.
@@ -39,17 +45,23 @@ Der Anteil an inaktiven Daten kann mittels eines Life Cicle Managements verringe
 	\item \textbf{Offline Data} \\
 	Daten auf welche nicht direkten Zugriff erwartet wird. z.B. E-Mail Archivierung für Compliance. (u.a. Tape)
 \end{itemize}
+
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.9\linewidth]{fig/sla}
 	\caption{Beispiele für SLAs}
 	\label{fig:sla_beispiele}
 \end{figure}
+
 \section{Sie sind in der Lage Data-Tiers und deren Aufgaben zu erklären}
+
 \subsection{Tiers vs Layer}
 In der Softwareentwicklung sind Layers typischerweise logisch zu verstehen, beispielsweise hat man ein View-Layer, ein Business-Layer und ein Persistenz-Layer. Tiers dagegen sind das physische Äquivalent zu den logischen Layers. Dabei hat man z.B. eine Trennung von einem Webserver, eine, Applikationsserver und einem DB Server (u.a. auch Aspekte wie Load-Balancing). Bei den Layers spricht von der horizontalen Ansicht und bei den Tiers von der vertikalen.
 
+\newpage
+
 \subsection{Storage Tiers}\label{sec:storagetier}
+
 \begin{itemize}
 	\item \textbf{Tier 1}
 		\subitem Höchster Speed, sehr zuverlässig, hohe Skalierbarkeit, sehr teuer. Wird von Mission Critical Data benutzt.
@@ -80,8 +92,10 @@ Tape Archivierung ist immer noch das billigste Archiv-Medium und der vielseitigs
 Meint \emph{Massive Array of Idle Disks}. Wird eingesetzt bei Archivierungslösungen, bei denen auf Festplatten archiviert wird. Daher wird nicht häufig auf diese zugegriffen, was bedeutet, dass diese auch abgeschaltet werden können und bei Bedarf wieder hochgefahren werden können. Das bedeutet Stromersparnis - wichtig bei Green IT.
 
 Beim Lesen muss gewartet werden, bis die korrekte Festplatte hochgefahren wurde. Das Schreiben geschieht auf einen Cache, oder auf eine zufällig laufende Festplatte. Danach wird die korrekte Festplatte hochgefahren und die Daten dorthin verschoben.
+
 \subsection{Information Lifecycle Management (ILM)}
 Verschiebung der Daten von Tier 1 bis Tier n (oder zur Löschung), mit dem Ziel der Optimierung der Kosten in der IT. Verschiebung anhand Kriterien wie Kosten, Ökonomischer Wert, Speicherzeit, letzter Zugriff, Anforderung an Zugriffsgeschwindigkeit oder auch gesetzliche Bestimmungen.
+
 \subsection{Speicherallokation / Effizienz}\label{sec:speichereffizienz}
 \begin{itemize}
 	\item \textbf{allocation} \\
@@ -93,8 +107,10 @@ Verschiebung der Daten von Tier 1 bis Tier n (oder zur Löschung), mit dem Ziel 
 	\item \textbf{COPQ} \\
 		Bedeutet \emph{Cost of poor quality}. Beschreibt die Differenz zwischen den gesamten Kosten für ein Speichersystem (Unterhalt + Anschaffung) und den Kosten, welche durch den effektiv belegten Speicherplatz relativ dazu entstehen. Beispiel; 2TB Platte kostet bei digitec.ch 100CHF, davon braucht man aber nur 300GB, dann wären die COPQ 70CHF.
 \end{itemize}
+
 \section{Sie sind fähig die kritischen Punkte eines Datacenters zu adressieren und Massnahmen vorzuschlagen}
 Wenn man die Qualität verbessern will, muss man auch die Verfügbarkeit erhöhen. Diese erhöht man nur durch Redundanz.
+
 \subsection{Replikationsarten}\label{sec:replikationsarten}
 \begin{itemize}
 	\item \textbf{Synchron} \\
@@ -104,6 +120,7 @@ Wenn man die Qualität verbessern will, muss man auch die Verfügbarkeit erhöhe
 	\item \textbf{Kombination Asynchron / Synchron} \\
 		Die primäre Datenbank schreibt alle Daten synchron auf eine kleine, lokale Zwischenstation. Diese Zwischenstation übernimmt anschliessend asynchron die Übertragung auf den entfernten Speicher.
 \end{itemize}
+
 \subsection{Beispiele für Redundanz}\label{sec:bsp_redundanz}
 \begin{itemize}
 	\item SANs Redundant halten (inkl. der Pfade zu den SANs).

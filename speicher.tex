@@ -36,22 +36,22 @@ ZFS verwendet CoW obwohl es eher ein RoW ist. Abbildung \ref{fig:write-file-zfs}
 \begin{enumerate}
 	\item Man geht vom konsistenten Zustand aus, bei dem das Filesystem mit den blauen Blöcken vollständig in Ordnung ist. Die Daten liegen dabei nur in den Blättern des Baumes. Die inneren Knoten des Baumes enthalten lediglich Zeiger und keine sonstigen Daten. Die separat gespeicherte Wurzel des Baumes heisst bei ZFS Überblock.
 	\item Nun sind ein paar Dateien zu schreiben. ZFS sucht dafür freie, momentan unbenutzte Blöcke (im Bild sind diese Blöcke grün hervorgehoben), es überschreibt niemals belegte. Ausserdem achtet es darauf, dass die Blöcke möglichst beieinander liegen, um effizient schreiben zu können. Noch gelangen die Daten aber nicht auf die Platte, weil sonst die Transaktion nicht mehr rückgängig zu machen wäre.
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\linewidth]{fig/write-file-zfs}
+		\caption{Datei schreiben in ZFS}
+		\label{fig:write-file-zfs}
+	\end{figure}
 	\item Irgendwann schliesst das Betriebssystem die Transaktion ab (commit). Dazu ist der Baum bis zur Wurzel zu aktualisieren. Der linke Block in der mittleren Ebene erhält die Zeiger auf die beiden neuen Datenblöcke. Der linke Block auf der Ebene darüber erhält links den Zeiger auf den eben modifizierten Block, und rechts wird der unveränderte Teil eingetragen. Dieser Schritt fasst in der Regel mehrere Schreibvorgänge in einer so genannten Transaktionsgruppe zusammen.
 	\item Nun ist alles vorbereitet, um die Transaktion endgültig zu beenden. Dazu schreibt ZFS den Überblock (im Bild: kleines Quadrat). Ist der neue Überblock erzeugt, sind die eben erstellten Blöcke im Filesystem aktiv. Bricht das System aus irgendeinem Grund ab (»halt«-Kommando an der Konsole, Systemabsturz, Stromausfall, ...), dann existiert noch der alte Überblock und damit der alte Zustand in den blauen Blöcken, denn das Filesystem beschrieb lediglich Blöcke, die im Ausgangszustand (blau) unbenutzt waren.
 \end{enumerate}
-\begin{figure}
-\centering
-\includegraphics[width=0.7\linewidth]{fig/write-file-zfs}
-\caption{Datei schreiben in ZFS}
-\label{fig:write-file-zfs}
-\end{figure}
 Wenn beim schreiben des Überblocks etwas schiefgeht hat ZFS auch diverse Mechanismen auf Lager um ihn wiederherzustellen.
 
 \subsubsection{Snapshots}
 
 Snapshots bezeichnen eine Kopie eines Filesystems zu einem bestimmten Zeitpunkt, die nicht mehr veränderlich ist. In ZFS lässt sich ein solcher Snapshot sehr einfach herstellen: Man merkt sich lediglich den Zeiger auf den Wurzelknoten des Filesystems und hat damit den Snapshot ohne grossen Aufwand bereits realisiert. Da bei Änderungen nie Datenblöcke überschrieben werden, kann der Snapshot weiterhin die alten Datenblöcke referenzieren. Wird eine Datei verändert und möchte man diese in den Snapshot übernehmen muss lediglich die Referenz geändert werden (Abbildung \ref{fig:snapshot}).
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.7\linewidth]{fig/snapshot}
 \caption{Snapshot}
@@ -80,13 +80,11 @@ Der Buffer Header hat ca. 20 Einträge. Die folgenden Einträge kennzeichnen den
 \end{description}
 Der Kern identifiziert den Bufferinhalt indem er die Device- und Blocknummer überprüft. Der Kern unterhält zwei doppelt verknüpfte Listen. Eine \emph{Freie Liste} in welcher alle freien Buffer eingetragen sind und eine Hash-Queue (Hash über Device- und Blocknummer) welche verwendet wird um auf einen Disk Block zuzugreifen.
 
-%TODO Buffer Szenarien (bin nicht drausgekommen).
-
 \subsubsection{Virtual File System (VFS)}
 
 Das VFS ist eine Abstraktion des zugrundeliegenden Filesystems und bietet eine einheitliche Schnittstelle für die Dateimanipulation einem User Prozess an. Die Schnittstelle kann von einem User Prozess im POSIX Format angesprochen werden (z.B. \texttt{open( „/usr/include/unistd.h“, O\_RDONLY)}) Das VFS setzt voraus dass ein File einen einzigartigen Namen und einen Benutzer hat. Für jedes spezifische Filesystem wird ein Mapping Modul bereitgestellt welches das reelle Filesystem auf das virtuelle Filesystem transformiert. Auf der Abbildung \ref{fig:virtual-file-system} ist dieses Mapping im Detail abgebildet.
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.7\linewidth]{fig/virtual-file-system}
 \caption{Virtual File System}
@@ -119,7 +117,17 @@ Die SCSI-Kommandos werden in folgende vier Kategorien eingeteilt:
 	\item[R] Lesen der Daten
 	\item[B] Bidirektional
 \end{description}
-Abbildung \ref{fig:scsi-read} zeigt ein Beispiel für den Read Befehl von SCSI. Dabei sind folgende Elemente interessant:
+Abbildung \ref{fig:scsi-read} zeigt ein Beispiel für den Read Befehl von SCSI. 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{fig/scsi-read}
+	\caption{SCSI Read Befehl}
+	\label{fig:scsi-read}
+\end{figure}
+
+\noindent
+Dabei sind folgende Elemente interessant:
 \begin{description}
 	\item[Operation Code:] Der Hexcode 08 steht für den Read Befehl
 	\item[Logical Unit Number (LUN):] Die LUN ist eine Nummer um eine durch das SCSI Protokoll adressierte logische Diskeinheit zu identifizieren. Eine LUN wird für jegliche Geräte verwendet, egal ob Tapes oder virtuelle Volumes.
@@ -127,16 +135,9 @@ Abbildung \ref{fig:scsi-read} zeigt ein Beispiel für den Read Befehl von SCSI. 
 	\item[Transfer Length:] Die Transfer Length gibt die Anzahl der Blöcke an, die man lesen möchte.
 \end{description}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.7\linewidth]{fig/scsi-read}
-\caption{SCSI Read Befehl}
-\label{fig:scsi-read}
-\end{figure}
-
 Abbildung \ref{fig:fc-topologien} zeigt eine Überblick über die verschiedenen Fibre Channel Topologien. Von den drei Topologien hat sich nur die Fabric Topologie durchgesetzt. 
 
-\begin{figure}
+\begin{figure}[h!]
 	\centering
 	\begin{subfigure}[b]{0.3\textwidth}
 		\includegraphics[width=\textwidth]{fig/fc-point-to-point}
@@ -155,6 +156,7 @@ Abbildung \ref{fig:fc-topologien} zeigt eine Überblick über die verschiedenen 
 	\caption{Fibre Channel Topologien}\label{fig:fc-topologien}
 \end{figure}
 
+\noindent
 Bei der Fabric Topologie werden die Server und die Storage Subsysteme an einen Fibre Channel Switch angeschlossen. Fibre Channel mit einer Fabric Topologie umgesetzt bietet folgende Vorteile:
 \begin{itemize}
 	\item Mehrzweck-Netzwerk möglich um Speichergeräte, Video Streaming und Cluster Server zu verbinden.
@@ -188,13 +190,14 @@ Das FC Protokoll besteht aus 5 Layer welche nachfolgend genauer beschrieben sind
 \end{description}
 Um einer grossen Anzahl von Ansprüchen in der Kommunikation gerecht zu werden, definiert FC mehrere Service Klassen im FC-2 Layer. Abbildung \ref{fig:fc-service-classes} gibt einen Überblick über alle Klassen. 
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.7\linewidth]{fig/fc-service-classes}
+\includegraphics[width=0.5\linewidth]{fig/fc-service-classes}
 \caption{Fibre Channel Service Klassen}
 \label{fig:fc-service-classes}
 \end{figure}
 
+\noindent
 Fibre Channel definiert verschiedenen Port Typen. Bei einem Gerät (Server, Storage usw.) gibt es folgende zwei Ports:
 \begin{description}
 	\item[N\_PORT:] Das Gerät ist direkt mit einem Switch verbunden.
@@ -226,7 +229,3 @@ Reservationen einzuhalten, wird der SysAdmin aufgefordert (zB bei 80\% Füllgrad
 \subsection{Sie können eine Scale-Out Architektur beschreiben.}
 
 Bei einer Scale-Out Architektur wird die Infrastruktur durch Hinzufügen von gleichartigen Servern erweitert. Das Gegenstück ist die Scale-Up Architektur welche einzelne Server aufrüstet. Weil die Daten in einer Scale-Out Architektur auf verschiedenen Server gespeichert werden, muss man sogenannte Objekt Speicher verwenden. Objekt Speicher verwenden für jedes Objekt eine einzigartige ID, anstatt den FS Pfad. Das erlaubt einen Zugriff auf die Daten ohne den Server zu kennen auf dem das Objekt liegt, oder sogar ohne das Datacenter zu kennen das den Server betreibt. Zusätzlich können einem Objekt Metadaten angehängt werden um z.B. ACL oder Tags für Bilder mit dem Objekt zu speichern.
-
-\subsection{Sie können das Erlernte auf das Design eines einfachen Datacenters anwenden.}
-
-Klar! (Joho flick mol dis Enterprise-Lab!)

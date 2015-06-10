@@ -1,24 +1,21 @@
 \chapter{Server-Virtualisierung}
 
 \section{Grundlagen}
-Überall kann man Virtualisierung einsetzen. Ob bei Server, Speicher, Applikation, Desktops oder Netzwerk. Mit Virtualisierung will man die Abstraktion von der darunterliegende Gerätschaft erreichen.
+Überall kann man Virtualisierung einsetzen. Ob bei Server, Speicher, Applikation, Desktops oder Netzwerk. Mit Virtualisierung will man die Abstraktion von der darunterliegende Gerätschaft erreichen. Im Zusammenhang mit der Virtualisierung fällt auch oft der Begriff Partitionierung (Aufteilung eines Dinges in mehrere unabhängige Elemente).
 
 \subsection{Virtualisierungsarten}
 \label{sec:virtualisierungsarten}
 \begin{description}
-	\item[HW Partitionierung] Teuer, nur noch auf High End Computer anzutreffen. Wie IBM/z, p Systems, Sun/Oracle Sparc.
-	\item[HW Virtualisierung] Mittels Hypervisor.
-	\item[OS Virtualisierung] Junge, leichtgewichtige Virtualisierungsart.
+	\item[HW Partitionierung:] Teuer, nur noch auf High End Computer anzutreffen. Wie IBM/z, p Systems, Sun/Oracle Sparc.
+	\item[HW Virtualisierung:] Mittels Hypervisor.
+	\item[OS Virtualisierung:] Junge, leichtgewichtige Virtualisierungsart.
 \end{description}
-\begin{displayquote}
-	Partitionierung: Aufteilung eines Dinges in mehrere unabhängige Elemente.
-\end{displayquote}
 
 \subsection{Gründe für eine HW Virtualisierung}
 \label{sec:gruende-hw-virtualisierung}
 \begin{itemize}
 	\item Ressourcen Optimierung
-	\item Konsoldierung
+	\item Konsolidierung
 	\item Maximierung der Uptime
 	\item Schutz der Applikation von Serverausfällen
 	\item Einfache Migration wenn Anforderungen wechseln
@@ -31,26 +28,27 @@ IBM virtualisiert auf den Mainframes bereits in den 60er Jahren. Die Virtualisie
 \subsection{Was bedeutet Virtualisierung?}
 \label{sec:was-bedeutet-virtualisierung}
 \begin{description}
-	\item[Emulation] Ein System ahmt das Verhalten eines anderes Systems nach, d.h. eine x86 CPU kann eine PowerPC CPU emulieren.
-	\item[Simulation] Zu Grunde liegt ein Modell, welches die Schlüssel-Charakteristika des zu Simulierenden repräsentiert.
-	\item[Virtualität] Eigenschaft einer Sache, nicht in der Form zu existieren, in der sie zu existieren scheint.
-	\item[Virtualisierung] Im Prinzip ähnlich zur Emulation, allerdings werden dabei nicht alle Komponenten des zu virtualisierenden tatsächlich emuliert, sondern z.B. CPU Instruktionen laufen direkt auf der CPU und I/O Geräte werden emuliert.
+	\item[Emulation:] Ein System ahmt das Verhalten eines anderes Systems nach, d.h. eine x86 CPU kann eine PowerPC CPU emulieren.
+	\item[Simulation:] Zu Grunde liegt ein Modell, welches die Schlüssel-Charakteristika des zu Simulierenden repräsentiert.
+	\item[Virtualität:] Eigenschaft einer Sache, nicht in der Form zu existieren, in der sie zu existieren scheint.
+	\item[Virtualisierung:] Im Prinzip ähnlich zur Emulation, allerdings werden dabei nicht alle Komponenten des zu virtualisierenden tatsächlich emuliert, sondern z.B. CPU Instruktionen laufen direkt auf der CPU und I/O Geräte werden emuliert.
 \end{description}
 
 \subsection{VMM - Virtual Machine Monitor}
 \label{sec:vmm-virtual-machine-monitor}
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.4\linewidth]{fig/vmm}
-	\caption{VMM}
-	\label{fig:vmm}
-\end{figure}
 Die VM ist die Umgebung erzeugt vom VMM. Die VMM ist eine System Software Schicht und besteht aus folgenden drei Teilen:
 \begin{description}
 	\item[Dispatcher] dessen Initial Instruction am Speicherplatz liegt wohin die HW trapped.
 	\item[Allocator] der entscheidet wer welche Systemressourcen bekommt. Er hat 1 oder n Member (VM).
 	\item[Interpreter] für alle Instruktionen die trappen, eine Interpreter Routine pro privilegierte Instruktion.
 \end{description}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.4\linewidth]{fig/vmm}
+	\caption{VMM}
+	\label{fig:vmm}
+\end{figure}
 
 \subsection{Instruktionsklassifikation}
 Es gibt zwei Betriebsmodis.
@@ -63,17 +61,6 @@ Eine privilegierte Instruktion verursacht einen Trap im User Modus. Im Superviso
 \subsection{Trap}
 Ein \textit{Trap} ist eine Form eines Interrupt, d.h. er unterbricht das laufende Programm, springt zu einer anderen, vordefinierten Memorystelle, macht dort irgendwas und kehrt anschliessend zum Programm zurück. Manchmal gleichbedeutend mit \textit{Exception} oder \textit{Fault}.
 
-\subsection{Vorteile (Hypervisor) Virtualisierung}
-Möglichkeiten, welche die Hypervisor Technologie mitbringt:
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.7\linewidth]{fig/vorteile-hypervisor-virtualisierung}
-\caption{Vorteile Hypervisor Virtualisierung}
-\label{fig:vorteile-hypervisor-virtualisierung}
-\end{figure}
-
-Frage an die Leser: Was bedeutet Workload Embedding? (Im Gegensatz zu Workload Consolidation?)
-
 \subsection{Challenges beim Betrieb einer VMM}
 Die Challenges gelten wohl für die VMM und nicht für den Sysadmin, der das System betreibt.
 \begin{itemize}
@@ -83,7 +70,17 @@ Die Challenges gelten wohl für die VMM und nicht für den Sysadmin, der das Sys
 	\item VMM sollte eine ''virtuelle Plattform Interface'' zu den Gast-SW präsentieren.
 \end{itemize}
 
-\newpage
+\subsection{Vorteile (Hypervisor) Virtualisierung}
+Möglichkeiten, welche die Hypervisor Technologie mitbringt:
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{fig/vorteile-hypervisor-virtualisierung}
+	\caption{Vorteile Hypervisor Virtualisierung}
+	\label{fig:vorteile-hypervisor-virtualisierung}
+\end{figure}
+
+Frage an die Leser: Was bedeutet Workload Embedding? (Im Gegensatz zu Workload Consolidation?)
+
 \section{X86-Virtualisierung}
 \subsection{Die drei Anforderungen von Popek und Goldberg}
 \label{sec:popek-goldberg-anforderungen}
@@ -111,8 +108,9 @@ Eine virtuelle Maschine soll ja laut Popek und Goldberg ihre Instruktionen mögl
 \subsection{Theorem 2}
 Eine beliebige Prozessorarchitekturen der dritten Generation ist rekursiv virtualisierbar, wenn sie selbst virtualisierbar ist und für sie ein VMM ohne Zeitabhängigkeiten konstruiert werden kann.
 Einige Architekturen, wie zum Beispiel die x86-Architektur ohne hardwaregestütze Virtualierungsfunktionen, erfüllen diese Bedingungen nicht, weswegen sie nicht auf dem klassischen Weg virtualisierbar sind.
+
 \subsection{Hypervisor}
-Das Problem ist, dass man nicht mehrere BS auf einem physikalischen Rechner laufen lassen kann, da ein BS dazu konstruiert ist, alle verfügbaren Ressourcen zu managen. Daher braucht es eine Zwischenschicht, welche die BS isoliert. Das BS erfährt somit keine Änderung. Der Hypervisor kommt zum Zug.
+Das Problem ist, dass man nicht mehrere BS auf einem physikalischen Rechner laufen lassen kann, da ein BS dazu konstruiert ist, alle verfügbaren Ressourcen zu managen. Daher braucht es eine Zwischenschicht, welche die BS isoliert. Das BS erfährt somit keine Änderung. Der Hypervisor kommt zum Zug. Abbildung \ref{fig:hypervisor-types} zeigt die zwei Typen von Hypervisoren (Virtual Machine Monitor)
 
 \begin{figure}[h!]
 \centering
@@ -121,12 +119,14 @@ Das Problem ist, dass man nicht mehrere BS auf einem physikalischen Rechner lauf
 \label{fig:hypervisor-types}
 \end{figure}
 
+\newpage
+
 \section{HW-Virtualisierung}
 \subsection{Direct Exceution}
 Es gibt Sicherheitsringe. Die x86 Architektur kennt 4 Ringe. User Level Programme laufen im Ring 3. Das OS braucht HW Zugriff und läuft auf Ring 0. Eine Virtualisierungsschicht muss unter Ring 0 gelegt werden oder es braucht eine Schnittstelle vom Hypervisor mit speziellen Befehlssatz. 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\linewidth]{fig/sicherheitsringe}
+\includegraphics[width=0.3\linewidth]{fig/sicherheitsringe}
 \caption{Sicherheitsringe}
 \label{fig:sicherheitsringe}
 \end{figure}
@@ -135,31 +135,34 @@ CPU hat mittels den Sicherheitsringe die Möglichkeiten ob die Instruktionen auc
 \subsection{Binary Translation}
 Im Mainframe wird für jede privilegierte Instruktion ein Trap ausgeführt. Der VMM fängt diese Instruktion ab und emuliert diese. Im x86 ISA sind nicht alle privilegierten Instruktionen Trap geschützt z.B. POPF. Wird diese bswp. im Ring 1 ausgeführt, interessiert das die CPU nicht und wird einfach nicht ausgeführt. Insgesamt gibt es 17 solcher ''nicht abgefanger'' Instruktionen. Das wäre allerdings eine Verletzung des ersten Theorems! Abhilfe schafft die binary Translation von VMWare (patentiert!).
 
-Im Bild sieht man, dass es eine Kombination zwischen direkter Ausführung und binary Translation ist. User Level Code wird direkt ausgeführt. Übersetzer Kernel Code ersetzt nicht virtualisierbare Instruktionen. Dazu ist keine Hardware oder Unterstüzung des Gast OS benötigt, denn das Gast OS hat keine Ahnung dass es in einer VM läuft. User Applikationen laufen direkt und werden nur übersetzt, wenn der Gast OS Kernel aufgerufen wird.
+In Abbildung \ref{fig:binary-translation-virt} sieht man, dass es eine Kombination zwischen direkter Ausführung und binary Translation ist. User Level Code wird direkt ausgeführt. Übersetzer Kernel Code ersetzt nicht virtualisierbare Instruktionen. Dazu ist keine Hardware oder Unterstüzung des Gast OS benötigt, denn das Gast OS hat keine Ahnung dass es in einer VM läuft. User Applikationen laufen direkt und werden nur übersetzt, wenn der Gast OS Kernel aufgerufen wird.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.3\linewidth]{fig/binary-translation-virt}
+	\caption{Binary Translation Virtualisation}
+	\label{fig:binary-translation-virt}
+\end{figure}
 
 Diese Binary Translation funktioniert nach dem Prinzip, dass der Code vom Kernel des Betriebssystems nach sensitiven Operationen durchsucht wird, der danach mit speziellem Code vom VMM ersetzt wird. Um die Performance zu erhalten, werden diese Blocks gechached. Trotzdem braucht ein solcher translated system call 2308 Prozessorzyklen, wobei ein native Systemcall lediglich 242 benötigen würde.
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.4\linewidth]{fig/binary-translation-virt}
-\caption{Binary Translation Virtualisation}
-\label{fig:binary-translation-virt}
-\end{figure}
 
 \subsection{Para Virtualisation (SW Assist)}
 Da VMWare ja das Patent auf binary translation besitzt, musste Xen eine Alternative zur x86 Trap-Problematik finden. Anstatt nun System Calls zur Laufzeit zu Übersetzen, wie das Binary Translation macht, müssen nun diese statisch im Source Code ersetzt werden. Dabei kommt das Hypercall Interface zum Einsatz, um direkt mit dem Hypervisor kommunizieren zu können. Da keine Übersetzung zur Laufzeit gemacht werden muss, ist dieser Ansatz zwar schneller, dafür müssen die Betriebssysteme extra angepasst werden. Somit laufen auch keine unmodifizierten Betriebssysteme.
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\linewidth]{fig/sw-virtualisierung-ringe}
+\includegraphics[width=0.2\linewidth]{fig/sw-virtualisierung-ringe}
 \caption{Software unterstützte Virtualisierung}
 \label{fig:sw-virtualisierung-ringe}
 \end{figure}
+
+\newpage
 
 \subsection{Full Virtualisation (HW Assist)}
 \label{sec:hw-unterstuetzt-virt}
 VMM und VM haben getrennte Addressbereiche. Dafür musste man neue Operationsmodis kreieren. VMX root (voll privilegiert für VMM) und VMX non-root (nicht voll privilegiert, für Gast-VM). Dies reduziert die Gast-VM SW Privilegien ohne auf die Ringe zurückgreifen zu müssen. Dieser neue CPU Modus erlaubt Ringe unterhalb Ring 0. Privlegierte Operatonion gelangen so direkt zum Hypervisor. Der Gast Status wird in virtual machine control structures abgespeichert.
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.4\linewidth]{fig/hw-virtualisierung-ringe}
+\includegraphics[width=0.3\linewidth]{fig/hw-virtualisierung-ringe}
 \caption{Hardware-Virtualisierung Ringe}
 \label{fig:hw-virtualisierung-ringe}
 \end{figure}
@@ -238,10 +241,12 @@ Alle virtuellen OS Instanzen sind isoliert von einander:
 \subsection{Isolation}
 Linux Container - Es braucht also drei wichtige Erweiterungen.
 \begin{description}
-	\item[chroot] Filesystemgrenze für Prozesse -
-	\item[cgroups]  - Ressourcen sharing zwischen Prozess Gruppen - Kernel Feature - Erlauben das feingranulare Allozieren von System Ressourcen wie CPU, Memory, Disk über eine Gruppe von Prozessen. CGroups sind hierarchisch gegliedert. Child erbt von Parent. Da alle Prozesse aus der init-Prozess ein Child von einem anderen Prozess ist, nennt man das Mono-Hierarchie (Einzel-Baum).  Beim Erzeugen eines Child-Prozess erbt der Prozess den Umgebungskontext wie die PATH Variabel uvw. vom Parent. Im Unterschied zum herkömmlichen Modell (single-tree), haben wir mit cgroups mehrere unanbhängige Prozess-Bäume. Bsp: memory (setzt limiten auf den Memory Vebrauch), freezer, devices usw.
+	\item[chroot] Filesystemgrenze für Prozesse
+	\item[cgroups] - Ressourcen sharing zwischen Prozess Gruppen - Kernel Feature - Erlauben das feingranulare Allozieren von System Ressourcen wie CPU, Memory, Disk über eine Gruppe von Prozessen. CGroups sind hierarchisch gegliedert. Child erbt von Parent. Da alle Prozesse aus der init-Prozess ein Child von einem anderen Prozess ist, nennt man das Mono-Hierarchie (Einzel-Baum).  Beim Erzeugen eines Child-Prozess erbt der Prozess den Umgebungskontext wie die PATH Variabel uvw. vom Parent. Im Unterschied zum herkömmlichen Modell (single-tree), haben wir mit cgroups mehrere unanbhängige Prozess-Bäume. Bsp: memory (setzt limiten auf den Memory Vebrauch), freezer, devices usw.
 	\item[ns] - Namespaces - Die Implementation von Container ist eine offensichtliche Verwendung von Namespaces. Ein Namespace abstrahiert eine globale Ressource in der Art, dass der zum Namespace gehörende Prozess meint, ihm gehört die Ressource einzigartig. Änderungen an der globalen Ressourcen sind nur sichtbar für diejenigen, welche im gleichen Namensraum sind. Bsp: PID namespaces isolieren den Prozess ID Namensraum (pro Container unique, aber so mehrere init Prozess mit ID 1 über mehrere Container möglich). Weitere User namespaces, Network, IPC, UTS, Mount namespaces.
 \end{description} 
+
+\newpage
 
 \subsection{Docker}
 Wir kennen nun die Linux Container. Mit Docker geht man eine Stufe tiefer. Ein Host hat n-Base Images. Das ist das OS wie Ubuntu, Redhat. Pro Base-Image kann man VMs hinzufügen. Eine VM repräsentiert eine Applikation. Wie PHP, MySQL, Wordpress.
@@ -250,7 +255,7 @@ Docker verwendet die Möglichkeit von LXC. Solche Container sind read-only und h
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.9\linewidth]{fig/lxc-vs-docker}
+\includegraphics[width=\linewidth]{fig/lxc-vs-docker}
 \caption{LXC vs. Docker}
 \label{fig:lxc-vs-docker}
 \end{figure}

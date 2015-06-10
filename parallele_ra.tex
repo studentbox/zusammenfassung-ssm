@@ -1,28 +1,12 @@
 \chapter{Parallele Rechnerarchitekturen}
 
-\section{Lernziele}
-\begin{enumerate}
-	\item Sie kennen und verstehen moderne Multi Core Architekturen, Memory Architekturen, und Cache Verwaltungen.
-	\item Sie verstehen den Einfluss der modernen Prozessoren auf ihre Programmiertätigkeit.
-	\item Sie kennen die wichtigsten Netze mit denen Cores oder Prozessoren verbunden werden.
-	\item Sie können die Kennwerte der Verbindungsnetze erklären.
-	\item Sie wissen worin sich SMPs auszeichnen und kennen die Vorteile
-	\item Sie können CMP, SMT, und CMT erklären.
-	\item Sie kennen die Speicherorganisationen im Detail
-	\item Sie können Prozessor Caches und deren Probleme erklären und wissen um die Möglichkeiten wie distributed Caching heute gemacht wird (Protokolle)
-	\item Sie Kennen Amdahls Gesetz und können es anwenden.
-\end{enumerate}
-
 \section{Supercomputer}
-Ein Supercomputer ist typischerweise sehr schnell - klar. Aber für die Wissenschaftler, welche ihn einsetzen, ist er immer noch viel zu langsam.
+Ein Supercomputer ist typischerweise sehr schnell - klar. Aber für die Wissenschaftler, welche ihn einsetzen, ist er immer noch viel zu langsam. Es werden zwei Arten von Supercomputer unterschieden:
 
-\subsection{Servercluster vs Grid}
-\begin{enumerate}
-	\item \textbf{Cluster of Server (Kernel level cluster)}
-		\subitem Hochverfügbare Rechner, welche wissen was die anderen Rechner um sie herum gerade tun. Sind über hochverfügbare Netzwerke untereinander verbunden.
-	\item \textbf{Cluster of Computing Nodes (grid)}
-		\subitem Verteilte Rechnernodes, z.B. SETI@home. Die einzelnen Nodes wissen nicht, was die anderen tun und werden von einer zentralen Stelle aus gesteuert.
-\end{enumerate}
+\begin{description}
+	\item[Cluster of Server (Kernel level cluster): ] Hochverfügbare Rechner, welche wissen was die anderen Rechner um sie herum gerade tun. Sind über hochverfügbare Netzwerke untereinander verbunden.
+	\item[Cluster of Computing Nodes (grid):] Verteilte Rechnernodes, z.B. SETI@home. Die einzelnen Nodes wissen nicht, was die anderen tun und werden von einer zentralen Stelle aus gesteuert.
+\end{description}
 
 \subsection{Einsatzgebiete Supercomputer}
 \begin{enumerate}
@@ -82,7 +66,7 @@ Instruktionen aus dem Memory zu holen ist extrem langsam. Um dieses Problem zu b
 Man teilte daher die Instruktion in 2 Teile - Fetching und Execution. Das Konzept einer Pipeline geht hier noch weiter und unterteilt die Instruktion in noch mehr Teile, die alle von einem speziellen Stück Hardware ausgeführt werden - und dies erst noch parallel.
 
 Die Abbildung \ref{fig:pipeline} zeigt eine solche Pipeline mit 5 Schritten. Zuerst wird die Instruktion geholt, danach wird entschieden was für eine es ist und was für Operanden gebraucht werden. Anschliessend werden diese Operanden geholt und die eigentliche Instruktion ausgeführt. Abschliessend wird das Resultat gespeichert oder weiterverarbeitet.
-\begin{figure}
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\linewidth]{fig/pipeline}
 	\caption{Pipeline}
@@ -94,7 +78,7 @@ Ein zweiter, unabhängiger Ansatz ist es, dass man nebst einer Pipeline auch noc
 \begin{figure}
 \centering
 \includegraphics[width=0.7\linewidth]{fig/superskalar}
-\caption{}
+\caption{Superskalare Architektur}
 \label{fig:superskalar}
 \end{figure}
 
@@ -115,16 +99,14 @@ Wenn man nun mehrere Prozessoren auf demselben Chip hat und zusätzlich noch Mul
 \caption{}
 \label{fig:flynn}
 \end{figure}
-\begin{enumerate}
-	\item {SISD - Single Instruction Single Data} \\
-		Ein klassischer Von-Neumann-Rechner
-	\item {SIMD - Single Instruction Multiple Data} \\
-		Ein Vektorrechner, VLIW-Rechner
-	\item {MISD - Multiple Instruction single Data} \\
-		Sehr selten, eingesetzt für Machine Learning oder Fehlerresistente Berechnung
-	\item {MIMD - Multiple Instruction Multiple Data} \\
-		Parallellrechner, moderne symmetrische Multiprozessoren
-\end{enumerate}
+\begin{description}
+	\item[Single Instruction Single Data:] Ein klassischer Von-Neumann-Rechner
+	\item[Single Instruction Multiple Data:] Ein Vektorrechner, VLIW-Rechner
+	\item[Multiple Instruction Single Data:]	Sehr selten, eingesetzt für Machine Learning oder fehlerresistente Berechnung
+	\item[Multiple Instruction Multiple Data:] Parallellrechner, moderne symmetrische Multiprozessoren
+\end{description}
+
+\newpage
 
 \section{Speicherorganisation in SMP Rechnern}
 
@@ -250,8 +232,6 @@ Alle Kommunikation läuft via das Zentrum des Sterns, daher nicht skalierbar. Da
 \caption{Stern}
 \label{fig:stern}
 \end{figure}
-
-\newpage
 
 \subsection{Baum}
 Der Baum ist sehr gut skalierbar und bietet eine ausgewogene Latenz. Dafür kann die Bandbreite eingeschränkt sein.
