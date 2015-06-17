@@ -22,7 +22,7 @@ Wird in Supercomputer verwendet zur Verbindung der einzelnen Nodes untereinander
 
 \section{Processor-Level Parallelism}
 
-\subsection{SMP - Symmetrische Multiprozessoren}
+\subsection{SMP - Symetric Multiprocessing}
 Eine SMP Architektur besteht aus mehreren physischen Prozessoren. Diese physischen Prozessoren müssen alle dieselben Funktionen ausführen können. Das bedeutet, dass nun die laufenden Prozesse frei auf die Prozessoren verteilt werden können.
 Das spezielle an symmetrischen Multiprozessoren ist, dass der Speicher und die I/O Geräte über alle Prozessoren hinweg geteilt wird, wie in Abbildung \ref{fig:mc_simple_chip} dargestellt ist. Sie sind über einen Bus zusammengeschaltet (Bottleneck), oder direkt z.B. via QPI (Intel QuickPath Interconnect). 
 
@@ -39,23 +39,22 @@ Danach begann man, die einzelnen Prozessoren in einem einzelnen Chip zusammenzuf
 	~
 	\begin{subfigure}[b]{0.27\textwidth}
 		\includegraphics[width=\textwidth]{fig/mc_simple_chip}
-		\caption{Simple Chip Multiprozessor}
+		\caption{SMT-Architektur}
 		\label{fig:mc_simple_chip}
 	\end{subfigure}
 	~
 	\begin{subfigure}[b]{0.25\textwidth}
 		\includegraphics[width=\textwidth]{fig/mc_shared_cache}
-		\caption{Shared Cache Chip Multiprozessor}
+		\caption{CMP-Architektur}
 		\label{fig:mc_shared_cache_chip}
 	\end{subfigure}
 	~
 	\begin{subfigure}[b]{0.25\textwidth}
 		\includegraphics[width=\textwidth]{fig/mc_shared_cache_mt}
-		\caption{CMT - Multithreaded, Shared Chip Multiprozessor}
+		\caption{CMT-Architektur}
 		\label{fig:mc_shared_cache:mt}
 	\end{subfigure}
-	
-	\caption{Verschiedene Multicore Architekturen}
+	\caption{Verschiedene Prozessor Architekturen}
 	\label{fig:cache_strukturen}
 \end{figure}
 
@@ -89,8 +88,8 @@ In einer Umgebung mit vielen Threads (auf dem Computer, auf dem dieser Text gesc
 
 Um eine solche Architektur in Hardware zu implementieren, benötigt es einfach mehr Register für die einzelnen Threads, sowie eine zusätzliche Kontrolleinheit in der Pipeline um die Threads auf dem Prozessor zu verteilen.
 
-\subsection{CMT - Chip Level Multi Threading}
-Wenn man nun mehrere Prozessoren auf demselben Chip hat und zusätzlich noch Multithreading anwendet, hat man eine Chip Level Multithreading Architektur (CMT). Wird heute angewendet.
+\subsection{CMT - Chip Level Multithreading}
+Wenn man nun mehrere Prozessoren auf demselben Chip hat und zusätzlich noch Multithreading anwendet, hat man eine Chip Level Multithreading Architektur (CMP + SMT = CMT). Wird heute angewendet.
 
 \section{Klassifikation nach Flynn}
 \begin{figure}
@@ -201,7 +200,15 @@ Grösserer Hardwareaufwand und Speicherzugriffe sind sequentialisiert -  d.h. la
 Bei Daten, die von mehreren Prozessoren verwendet werden, gibt es jeweils nur eine Kopie. Die Unterteilung übernimmt die Software selbst, indem es das Programm in Abschnitte unterteilt. Nach jedem Abschnitt werden alle Caches in den Speicher geschrieben (Cache flush). Wenn die Abschnitte zu klein sind, gibt es zu viele Cache Flushes, wenn sie zu gross sind können die Programme nicht effizient parallelisiert werden. Dieser Ansatz ist nicht sonderlich effizient, da es von konservativen Annahmen ausgeht.
  
 \section{Verbindungsnetzwerke}
-Man möchte bei Verbindungen möglichst hohe Leistung haben. Das heisst, dass man viele Leitungen benötigt. Gleichzeitig möchte man niedrige Kosten, was heisst dass man nur wenig Leitungen einsetzen darf.
+Wenn man mehrere Prozessoren und Speicher hat möchte man diese möglichst effizient miteinander verbinden. Man möchte diesen Verbindungen eine möglichst hohe Leistung haben. Das heisst, dass man viele Leitungen benötigt. Gleichzeitig möchte man niedrige Kosten, was heisst dass man nur wenig Leitungen einsetzen darf. Die Verbindungsnetzwerke werden mit folgenden Kennwerten klassifiziert:
+\begin{description}
+	\item[Inzident:] Wenn Kante und Knoten verbunden sind, sind sie inzident.
+	\item[Durchmesser:] Max. Entfernung zwischen zwei Knoten in Hops (Mass für max. Transferzeit).
+	\item[Bisektionsweite:] Möchte man ein Netzwerk halbieren ist die Bisektionsweite die Anzahl Kanten die man durchtrennen muss. Je niedriger die Bisektionsweite desto schlechter der Datenaustausch.
+	\item[Symmetrie:] Alle Knoten/Kanten verhalten sich gleich. Vereinfacht Programmierung, Routing usw.
+	\item[Skalierbarkeit:] Ein Verbindungsnetzwerk ist skalierbar, wenn einer Erweiterung des Netzwerks keine Beschränkungen entgegen stehen.
+	\item[Konnektivität:] Min. Anzahl Kanten die durchtrennt werden müssen damit Netz nicht mehr funktioniert. Je höher die Konnektivität desto ausfallsicherer das Netz.
+\end{description}
 
 \subsection{Lineares Feld}
 Unendlich skalierbar (hardwaretechnisch gesehen), offensichtliche Limitierungen bei der Bandbreite und Latenz.
@@ -260,13 +267,11 @@ Heute das beste und meist verwendetste Layout. Es ist nicht blockierend und verb
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.5\linewidth]{fig/crossbar_switch}
-\caption{(a) Ein 8x8 Crossbar Switch. (b) Ein offener Kreuzungspunkt. (c) Ein geschlossener Kreuzungspunkt.}
+\caption{Ein 8x8 Crossbar Switch}
 \label{fig:crossbar_switch}
 \end{figure}
 
 Der Nachteil bei Crossbar Switches ist die mangelnde Skalierbarkeit, denn die Anzahl an Knoten wächst im Quadrat mit der Anzahl der zu verbindenden Elemente. Wenn z.B. 1'000 CPUs mit 1'000 Memory Modulen verbunden werden sollen, würde es eine Million Kreuzungspunkte benötigen, was nicht gerade effizient wäre.
-
-\newpage
 
 \subsubsection{Omega Netzwerk}
 Stellen wir uns einen simplen 2x2 Switch vor, mit zwei Eingängen und zwei Ausgängen, siehe Abbildung \ref{fig:omegaswitch}. Unser kleiner Switch erhält eine (hier vereinfachte) Nachricht bestehend aus 4 Elementen. Das \texttt{Module}-Feld, gibt an, welches Memory-Modul benützt werden soll. Das \texttt{Address}-Feld sagt, an welche Adresse sich die Nachricht richtet. Das \texttt{Opcode}-Feld bestimmt, ob es eine Lese- oder eine Schreiboperation ist und schlussendlich das \texttt{Value}-Feld welche Daten denn geschrieben werden sollen, wenn es eine Schreiboperation ist.
@@ -284,10 +289,7 @@ Ein solch kleines Netzwerk bringt uns noch nicht weit, weswegen wir nun 8 Prozes
 	\caption{Ein Omega Netzwerk mit 8 CPUs und 8 Speicher}
 	\label{fig:omega_gross}
 	\end{figure}
-Dieses gezeigte Netzwerk wird \textbf{Omega Netzwerk} genannt. Es verbindet via 3 Stufen die 8 CPUs mit den Memories. Wir können auch sagen, für $ n $ CPUs und Memories benötigen wir $ log_{2}\ (n) $ Stufen und total $ \frac{n}{2}\ log_{2}\ (n) $ Switches, was einiges besser als das Crossbar Netzwerk ist, welches ja $ n^{2} $ Kreuzungspunkte benötigt.
+Dieses gezeigte Netzwerk wird \textbf{Omega Netzwerk} genannt. Es verbindet via 3 Stufen die 8 CPUs mit den Memories. Wir können auch sagen, für $ n $ CPUs und Memories benötigen wir $ log_{2}\ (n) $ Stufen und total $ \frac{n}{2}\ log_{2}\ (n) $ Switches, was einiges besser als das Crossbar Netzwerk ist, welches ja $ n^{2} $ Kreuzungspunkte benötigt. Im Beispiel mit den 8 Prozessoren werden daher nicht 64 Kreuzungspunkte wie beim Crossbar Switch benötigt, sondern nur 12 Switches. Der Nachteil vom Omega Netzwerk ist, dass es blockierend ist. Wenn nun z.B. die 2 Prozessoren 000 und 100 gleichzeitig auf eine Memory Stelle zugreifen möchten, muss ein Prozessor warten, da sie via denselben Switch zugreifen müssen.
 
-Im Beispiel mit den 8 Prozessoren werden daher nicht 64 Kreuzungspunkte wie beim Crossbar Switch benötigt, sondern nur 12 Switches.
-
-Der Nachteil vom Omega Netzwerk ist, dass es blockierend ist. Wenn nun z.B. die 2 Prozessoren 000 und 100 gleichzeitig auf eine Memory Stelle zugreifen möchten, muss ein Prozessor warten, da sie via denselben Switch zugreifen müssen.
 \section{Applikationsskalierung}
 Gemeinsame Zustände in die Datenbank verlegen (oder auslagern). Skalierbare Algorithmen verwenden. Fein granulares Locking verwenden, Worker Thread Pools verwenden. Natürlich auch immer Skalierungs-Tests durchführen, sowie die Applikation im Betrieb beobachten und Orte identifizieren, wo gewartet werden muss, sei dies wegen locks oder falschen Algorithmen, etc.
