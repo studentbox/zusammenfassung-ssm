@@ -32,15 +32,19 @@ In grossen Infrastrukturen gibt es unzählige Events. Im Event-Management geht e
 \section{Sie können die wichtigsten Funktionen eines Monitoring-Tools am Beispiel von NAGIOS erläutern}
 
 NAGIOS ist OpenSource und bietet unzählige Monitoring Möglichkeiten. Windows, Linux/UNIX, Routers, Switches, Firewalls, Drucker, Services, Applikationen. Benachrichtigungsmöglichkeiten über E-Mail, SMS und Web-Interface. Man kann Event-Handlers definieren - Reaktionen nach Problemerkennung - z.B. Neustart eines Webservers. Reporting Options. SLA availability repots, alert and notifcation reports und weitere. Multi-user, Skalierbar (bis zu 100 000 überwachende Nodes), bewährt, Failover protection, grosse Community.
-
-\paragraph{Arten der Überwachung}
+Nagios bietet folgende Überwachungsarten an:
 \begin{description}
 	\item[Aktive Überwachung] Überprüfung wird durch Nagios initiiert.
 	\item[Passive Überwachung] Überprüfung wird durch externe Programme initiiert. Antwort wird an Nagios gesendet und verarbeitet.
 	\item[Direkte Überwachung] Nagios kann direkt, ohne Zwischenstellen, die Dienste prüfen. Öffentliche Dienste wie HTTP, FTP, Ping etc. auf lokalen und entfernten Rechnern. Lokale Dienste wie CPU load, disk usage etc. auf lokalen Rechnern.
 	\item[Indirekte Überwachung] Nagios muss über Zwischenstellen wie der NRPE Agent, die Dienste überprüfen. Lokale Dienste auf entfernten Rechnern.
 \end{description}
-
-Nagios ist über Textdateien (cfg) konfigurierbar. timeperiods.cfg - Zeitangaben, wann überwacht werden soll. contacts.cfg - Kontakte, welche benachrichtig werden. commands.cfg - Überprüfungskommandos. localhost.cfg - überwachende Kommandos für den localhost. templates.cfg - Kommandos und Services können von Vorlagen erben.
-
+Nagios ist über folgende Textdateien (\texttt{cfg}) konfigurierbar:
+\begin{description}
+	\item[timeperiods.cfg] Zeitangaben, wann überwacht werden soll.
+	\item[contacts.cfg] Kontakte, welche benachrichtig werden.
+	\item[commands.cfg] Überprüfungskommandos. 
+	\item[localhost.cfg] überwachende Kommandos für den localhost. 
+	\item[templates.cfg] Kommandos und Services können von Vorlagen erben.
+\end{description}
 Beispiel: Ich möchte die CPU Auslastung auf einem Rechner prüfen. Das ist eine indirekte Überwachung, da dies ein lokaler Dienst eines entfernten Rechners ist. Ich brauche den NRPE Agent check\_nrpe, CPU Load Pluging check\_load. 

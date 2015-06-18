@@ -22,7 +22,7 @@ Ein Beispiel für ein modernes Filesystem ist ZFS welches von Sun Microsystems e
 \subsubsection{Volumes vs. Pooled Storage}
 
 Bei traditionellen Filesystemen war ein Filesystem für eine physikalische Partition zuständig. Wollte man mehrere physikalische Partitionen zu einer logischen Partition zusammenfassen musste man zusätzlich einen Logical Volume Manager installieren. Durch logische Volumen kann man z.B. Speicherplatz von zwei Festplatten zusammenfassen oder ein Volume spiegeln.
-ZFS fasst diese Funktionen zusammen indem die physischen Datenträger (alles vom Floppy bis zur SSD) in einem Pool zusammengefasst werden. Aus diesem Pool können das beliebig viele logische Partitionen mit eigenem Dateisystem erstellt werden. Die logischen Partitionen können dynamisch wachsen oder durch den Admin eingeschränkt werden.
+ZFS fasst diese Funktionen zusammen indem die physischen Datenträger (alles vom Floppy bis zur SSD) in einem Pool gesammelt werden. Aus diesem Pool können beliebig viele logische Partitionen mit eigenem Dateisystem erstellt werden. Die logischen Partitionen können dynamisch wachsen oder durch den Admin eingeschränkt werden.
 Klassische Dateisysteme abstrahieren zwar die Festplattenlogik, müssen dadurch aber komplizierte Strukturen erstellen um die Dateien abzuspeichern (kostet Zeit). ZFS verwendet zur Speicherung von Dateien und Metadaten ZFS-Objekte welche die DMU (Data Management Unit) zur Verfügung stellt. Wird nun eine Schreiboperation vom Betriebssystem ausgelöst, startet die DMU eine Transaktion. Gleichzeitig abschliessende Transaktionen werden zu Transaktionsgruppen gesammelt und dem SPA (Storage Pool Allocator) übergeben, welcher sie auf die physikalischen Platten schreibt.
 
 \subsubsection{Konsistenz}
@@ -49,7 +49,7 @@ Wenn beim schreiben des Überblocks etwas schiefgeht hat ZFS auch diverse Mechan
 
 \subsubsection{Snapshots}
 
-Snapshots bezeichnen eine Kopie eines Filesystems zu einem bestimmten Zeitpunkt, die nicht mehr veränderlich ist. In ZFS lässt sich ein solcher Snapshot sehr einfach herstellen: Man merkt sich lediglich den Zeiger auf den Wurzelknoten des Filesystems und hat damit den Snapshot ohne grossen Aufwand bereits realisiert. Da bei Änderungen nie Datenblöcke überschrieben werden, kann der Snapshot weiterhin die alten Datenblöcke referenzieren. Wird eine Datei verändert und möchte man diese in den Snapshot übernehmen muss lediglich die Referenz geändert werden (Abbildung \ref{fig:snapshot}).
+Snapshots bezeichnen eine Kopie eines Filesystems zu einem bestimmten Zeitpunkt, die nicht mehr veränderlich ist. In ZFS lässt sich ein solcher Snapshot sehr einfach herstellen: Man merkt sich lediglich den Zeiger auf den Wurzelknoten des Filesystems und hat damit den Snapshot ohne grossen Aufwand bereits realisiert. Da bei Änderungen nie Datenblöcke überschrieben werden, kann der Snapshot weiterhin die alten Datenblöcke referenzieren. Wird eine Datei verändert und möchte man diese in den Snapshot übernehmen muss lediglich die Referenz geändert werden (Abbildung \ref{fig:snapshot}). Snapshots eignen sich nicht als Backup-Lösung, weil sich das aktive Filesystem und der Snapshot die gleichen Blöcke teilen.
 
 \begin{figure}[h!]
 \centering
@@ -60,7 +60,7 @@ Snapshots bezeichnen eine Kopie eines Filesystems zu einem bestimmten Zeitpunkt,
 
 \subsubsection{Selbstheilung}
 
-Herkömmliche Filesysteme setzen auf Sektorprüfsummen und RAID um Datenverlust zu verhindern. Diese Techniken erkennen aber eine ganze Reihe von Fehlern nicht. ZFS kann Daten selbstständig redundant speichern (RAID 1) und beherrscht auch eine verbesserte RAID 5-Variante welche sich RAID z nennt. Zusätzlich zu diesen bekannten Techniken kann sich ZFS selbst heilen. Wenn ein herkömmliches Filesystem einen defekten Block liest bleibt das unbemerkt, auch wenn eine Spiegelung des defekten Blockes vorhanden ist. Der defekte Block wird dann vom User Prozess verarbeitet, was zu Systemabstürzen führen kann. ZFS erkennt solche defekten Blöcke zur Laufzeit mittels Prüfsumme und ersetzt den defekten Block mit seiner Spiegelung auf einem anderem Device. Zusätzlich kann ZFS den defekten Block auch reparieren. Dieser Vorgang muss jedoch manuell ausgelöst werden.
+Herkömmliche Filesysteme setzen auf Sektorprüfsummen und RAID um Datenverlust zu verhindern. Diese Techniken erkennen aber eine ganze Reihe von Fehlern nicht. ZFS kann Daten selbstständig redundant speichern (RAID 1) und beherrscht auch eine verbesserte RAID 5-Variante welche sich RAID z nennt. Zusätzlich zu diesen bekannten Techniken kann sich ZFS selbst heilen. Wenn ein herkömmliches Filesystem einen defekten Block liest bleibt das unbemerkt, auch wenn eine Spiegelung des defekten Blockes vorhanden ist. Der defekte Block wird dann vom User Prozess verarbeitet, was zu Systemabstürzen führen kann. ZFS erkennt solche defekten Blöcke zur Laufzeit mittels Prüfsumme und ersetzt den defekten Block mit seiner Spiegelung von einem anderem Device. Zusätzlich kann ZFS den defekten Block auch reparieren. Dieser Vorgang muss jedoch manuell ausgelöst werden.
 
 \subsection{Sie wissen wie der Kern und das File System zusammenarbeiten.}
 
