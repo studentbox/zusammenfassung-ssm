@@ -29,55 +29,77 @@ Das Ziel des IT Betriebs ist ganz klar, dass die Services verfügbar sein müsse
 \end{itemize}
 
 \subsubsection{IT-Betriebsprozesse}
-\begin{itemize}
-	\item \textbf{Management-Prozesse}
-	\begin{itemize}
-		\item \textbf{Service Level Management}\\
+\begin{description}
+	\item[Management-Prozesse] \hfill
+	\begin{description}
+		\item[Service Level Management] \hfill \\
 			Definiert, überwacht und optimiert die IT-Service Vereinbarungen mit dem Business.
-		\item \textbf{IT-Service Continuity Management} \\
+		\item[IT-Service Continuity Management] \hfill \\
 			Stellt die Wiederherstellung von Anwendungen, Plattformen und Daten durch Vorsorgemassnahmen sicher und überprüft und testet diese periodisch.
-		\item \textbf{Architektur und Standards} \\
+		\item[Architektur und Standards] \hfill \\
 			Legt die Architektur und Standards für den IT-Betrieb fest. Dies umfasst Hardware, Software (z.B. welche Datenbanken) und IT-Betriebsapplikationen.
-		\item \textbf{Plattform-Management} \\
+		\item[Plattform-Management] \hfill \\
 			Erstellt und wartet Runtime-Plattformen für die IT. Eine Plattform umfasst Hard- und Software.
-	\end{itemize}
-	\item \textbf{Kernprozesse}
-	\begin{itemize}
-		\item \textbf{Monitoring}\\
+	\end{description}
+	\item[Kernprozesse] \hfill
+	\begin{description}
+		\item[Monitoring] \hfill \\
 			Effektive und potentielle Störungen erkennen und automatische Massnahmen zur Behebung auslösen.
-		\item \textbf{Incident Management} \\
+		\item[Incident Management] \hfill \\
 			Stellt bei Beeinträchtigung eines Services diesen so schnell als möglich wieder her.
-		\item \textbf{Problem Management} \\
+		\item[Problem Management] \hfill \\
 			Hält Fehlerhäufigkeit möglichst gering und verhindert das wiederholte Auftreten von Störungen.
-		\item \textbf{Change Management} \\
+		\item[Change Management] \hfill \\
 			Managed alle Änderungen an Software / Hardware und Netzen mittels standardisierten Verfahren.		
-		\item \textbf{SW/HW Deployment / Release Management} \\
+		\item[SW/HW Deployment / Release Management] \hfill \\
 			Plant und führt den Rollout von getesteter Hard- und Software durch.		
-		\item \textbf{Service Desk} \\
+		\item[Service Desk] \hfill \\
 			Der Service Desk (Help Desk) ist die zentrale Anlaufstelle für den Kunden.		
-	\end{itemize}
-	\item \textbf{Unterstützungsprozesse}
-	\begin{itemize}
-		\item \textbf{Configuration Management} \\
+	\end{description}
+	\item[Unterstützungsprozesse]
+	\begin{description}
+		\item[Configuration Management] \hfill \\
 			Führt den Status aller IT Komponenten und deren Beziehungen und stellt diese Informationen allen anderen ICT Prozessen zur Verfügung.
-		\item \textbf{Capacity Management} \\
+		\item[Capacity Management] \hfill \\
 			Plant und verwaltet die für den IT Betrieb nötigen technischen Ressourcen (Storage, RAM, CPU, ...).
-		\item \textbf{Availability Managmenet} \\
+		\item[Availability Management] \hfill \\
 			Stellt die vereinbarte Verfügbarkeit und die Performance der IT Services sicher.
-		\item \textbf{Financial Management of IT Services} \\
+		\item[Financial Management of IT Services] \hfill \\
 			Regelt und wickelt die Bezahlung von IT Services ab. IT als Dienstleister innerhalb eines Unternehmens.
-		\item \textbf{Supply Management}
-	\end{itemize}
-\end{itemize}
+	\end{description}
+\end{description}
 
 \section{Sie kennen den Incident-Management Prozess und können Key Performance Indikatoren und Critical Success Factors erläutern.}
+\label{sec:incident-management}
 
 \subsection{Ziel}
-Das Ziel des Incident Management Prozesses  ist die schnelle Behebung von Störungen. Dabei werden oft temporäre Lösungen eingesetzt, um die Services möglichst schnell wieder verfügbar zu machen - was zufriedene Nutzer bedeutet.
+Das Ziel des Incident Management Prozesses ist die schnelle Behebung von Störungen. Dabei werden oft temporäre Lösungen (Workarounds) eingesetzt, um die Services möglichst schnell wieder verfügbar zu machen - was zufriedene Nutzer bedeutet.
+
 \subsection{Ablauf}
-Incidents werden durch aktives Monitoring oder durch eine Kundenmeldung entdeckt und an den Service Desk weitergeleitet. Anschliessend muss der Incident kategorisiert und priorisiert werden. Darauf folgt die Fehlerbehandlung und der Lösungsprozess. Ein gutes Incident-Management hat dazu eine Knowledge Base zu Grunde wo alle eingetreten Fehler dokumentiert sind sowie die dazugehörige Lösung. In grösseren Unternehmen ist die Supportorganisation mehrstufig gegliedert (1. Level Support (Arbeiten zu 100 Prozent, können 80 Prozent der Fehler lösen), 2. Level Support (Service - Spezialisten), 3. Level Support (Entwicklungsabteilungen oder Hersteller)).
-\subsection{KPIs - Key Performance Indicator}
-Wie viele Störungen treten auf? Wie lange dauert es durchschnittlich bis die Störung behoben ist? Wie viel Prozent der Störungen kann der First-Level Support direkt beheben?
+Abbildung \ref{fig:ablauf-incident-management} zeigt die Aktivitäten eines einfachen Incident Management Prozesses. Der Prozess kann in verschiedenen Unternehmen sehr unterschiedlich sein und an die Anforderungen des Unternehmens angepasst sein.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{fig/ablauf-incident-management}
+	\caption{Aktivitäten eines Incident Management Prozesses}
+	\label{fig:ablauf-incident-management}
+\end{figure}
+
+\subsection{Rollen}
+\begin{description}
+	\item[Incident Manager:] Der Incident Manager ist verantwortlich für einen funktionierenden Prozess und stellt sicher, dass die Aktivitäten innerhalb dieses Prozesses effektiv und effizient erfolgen.
+	\item[1st Line Support:] Der 1st Line Support nimmt Anrufe entgegen und versucht Incidents mithilfe einer Knowledge Base zu lösen. Ungefähr 80\% aller Incidents können hier gelöst werden. Dauert die Bearbeitung aber länger als ca. eine halbe Stunde wird der Incident an den 2nd Line Support weitergegeben.
+	\item[2nd Line Support:] Weitergeleitete Incidents werden von Engineers des IT-Betriebs behandelt. Der 2nd Line Support ist meisten nicht die Hauptaufgabe dieser Teams. Er arbeitet ohne Zeitlimit am Problem.
+	\item[3rd Line Support:] Beim 3rd Line Support werden die (Inhouse) Entwickler geweckt. Bei externen Dienstleistern (z.B. Oracle) wird zusammen mit den Inhouse Entwicklern nach Lösungen genutzt.
+\end{description}
+
+\subsection{Key Performance Indicator}
+\begin{itemize}
+	\item Wie viele Störungen treten auf? 
+	\item Wie lange dauert es durchschnittlich bis die Störung behoben ist? 
+	\item Wie viel Prozent der Störungen kann der First-Level Support direkt beheben?
+\end{itemize}
+
 \subsection{CSF - Critical Success Factors}
 Für den Erfolg des Incident Management Prozesses sind folgende Punkte essentiell:
 \begin{itemize}

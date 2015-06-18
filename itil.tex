@@ -217,47 +217,7 @@ Dieser Prozess wird im Abschnitt \ref{sec:monitoring} ausführlich beschrieben.
 
 \subsection{Incident-Mgmt.}
 
-\subsubsection{Ziele}
-
-Das Incident Management befasst sich mit allen Ereignissen, die einen Service stören oder beeinflussen können, und ist verantwortlich für den gesamten Lebenszyklus aller Incidents. Wichtigstes Ziel des Incident Management ist die schnellstmögliche Wiederherstellung des SLA-konformen Servicebetriebs und die Minimierung negativer Auswirkungen auf die Geschäftsprozesse. Um eine schnelle Wiederherstellung zu ermöglichen sollten die Incidents priorisiert werden, je nachdem wie die Geschäftsprozesse beeinflusst werden.
-
-\subsubsection{Begriffe}
-
-\begin{description}
-	\item[Incident:] Ein Incident ist eine ungeplante Unterbrechung oder Reduktion der Qualität eines IT-Service. Auch Ausfälle welche keinen direkte Auswirkung auf den Service haben (z.B. Ausfall RAID-Festplatte) sind ein Incident.
-	\item[Workaround:] Ein Workaround ist eine Massnahme zur Reduzierung der Auswirkung eines Incidents, solange keine endgültige Lösung bereitsteht. Workarounds werden meist in einer Knowledge-Datenbank festgehalten.
-	\item[Timescales:] Für jeden Bearbeitungsschritt eines Incidents wird im SLA ein Zeitfenster definiert welche vom OLA oder Contract eingehalten werden muss.
-	\item[Incident Models:] Incident Models sind vordefinierte Abläufe um auf ähnliche Incidents zu reagieren.
-	\item[Major Incidents:] Ein Major Incident hat eine grosse Auswirkung auf die Geschäftsprozesse und muss dementsprechend speziell gehandhabt werden. Im SLA sollte Kriterien für einen Major Incident definiert werden.
-\end{description}
-
-\subsubsection{Aktivitäten}
-
-Abbildung \ref{fig:ablauf-incident-management} zeigt die Aktivitäten eines einfachen Incident Management Prozesses. Der Prozess kann in verschiedenen Unternehmen sehr unterschiedlich sein und an die Anforderungen des Unternehmens angepasst sein.
-
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.7\linewidth]{fig/ablauf-incident-management}
-\caption{Aktivitäten eines Incident Management Prozesses}
-\label{fig:ablauf-incident-management}
-\end{figure}
-
-\subsubsection{Rollen}
-
-\begin{description}
-	\item[Incident Manager:] Der Incident Manager ist verantwortlich für einen funktionierenden Prozess und stellt sicher, dass die Aktivitäten innerhalb dieses Prozesses effektiv und effizient erfolgen.
-	\item[1st Line Support:] Der 1st Line Support nimmt Anrufe entgegen und versucht Incidents mithilfe einer Knowledge Base zu lösen. Ungefähr 80\% aller Incidents können hier gelöst werden. Dauert die Bearbeitung aber länger als ca. eine halbe Stunde wird der Incident an den 2nd Line Support weitergegeben.
-	\item[2nd Line Support:] Weitergeleitete Incidents werden von Spezialisten des IT-Betriebs behandelt. Der 2nd Line Support ist meisten nicht die Hauptaufgabe dieser Teams.
-	\item[3rd Line Support:] Beim 3rd Line Support handelt es sich meist um externe Fachgruppen oder z.B. um einen Softwarehersteller der diesen Support anbietet.
-\end{description}
-
-\subsubsection{KPI's}
-
-\begin{itemize}
-	\item Durchschnittliche Kosten pro Incident
-	\item Anteil falsch kategorisierter oder falsch zugewiesener Incidents
-	\item Anzahl Major Incidents/Anzahl Incidents
-\end{itemize}
+Dieser Prozess wird im Abschnitt \ref{sec:incident-management} ausführlich beschrieben.
 
 \subsection{zwei ausgewählten IT-Betriebsprozesse der Testatübung:}
 
