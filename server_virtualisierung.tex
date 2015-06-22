@@ -60,7 +60,7 @@ Um einen Prozess zu verwalten, muss das OS folgendes wissen:
 \end{figure}
 
 \paragraph{Virtueller zur physikalischem Adress-Übersetzung}
-Wird mittels MMU (Memory Management Unit) gelöst. Mappt physical pages to virtual pages. \\
+Wird mittels MMU (Memory Management Unit) gelöst. Mappt physical pages to virtual pages.
 
 \paragraph{Wechsel von Prozess Status}
 Ein Prozessor wechselt in einen anderen Status (z.B. bei Interrupt von Running in Ready). Abbildung \ref{fig:system-software-prozess-wechsel} zeigt diesen Statuswechsel.
@@ -93,6 +93,8 @@ Wenn im Hauptspeicher zu wenig Platz ist wird ein Prozess ins Swap ausgelagert. 
 	\caption{State Engine Processes in UNIX}
 	\label{fig:system-software-state-engine-processes-unix}
 \end{figure}
+
+\newpage
 
 \subsection{Prozess erzeugen}
 Prozess wird mittels Kernel system call \texttt{fork()} erzeugt. Anschliessend werden folgende Schritte durchgegangen:
@@ -182,6 +184,8 @@ Prozesse existieren als Objekte. Werden als neue oder als Kopie bestehender Proz
 \section{Virtuelle Maschinen}
 Überall kann man Virtualisierung einsetzen. Ob bei Server, Speicher, Applikation, Desktops oder Netzwerk. Mit Virtualisierung will man die Abstraktion von der darunterliegende Gerätschaft erreichen (Ressourcenmanagement). Im Zusammenhang mit der Virtualisierung fällt auch oft der Begriff Partitionierung (Aufteilung eines Dinges in mehrere unabhängige Elemente).
 
+\newpage
+
 \subsection{Virtualisierungsarten}
 \label{sec:virtualisierungsarten}
 \begin{description}
@@ -249,9 +253,10 @@ Die Challenges gelten wohl für die VMM und nicht für den Sysadmin, der das Sys
 	\item VMM sollte eine ''virtuelle Plattform Interface'' zu den Gast-SW präsentieren.
 \end{itemize}
 
-\subsection{Vorteile (Hypervisor) Virtualisierung}
-Abbildung \ref{fig:vorteile-hypervisor-virtualisierung} zeigt, welche Vorteile die Hypervisor Technologie mitbringt.
+\newpage
 
+\subsection{Vorteile (Hypervisor) Virtualisierung}
+Abbildung \ref{fig:vorteile-hypervisor-virtualisierung} zeigt, welche Vorteile die Hypervisor Technologie mitbringt. \emph{Wordload Embedding} ist ein von Microsoft eingeführter Begriff, welcher das optimieren von zwei Applikationen durch den Hypervisor meint.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\linewidth]{fig/vorteile-hypervisor-virtualisierung}
@@ -408,9 +413,7 @@ VMs sind schwergewichtig, Container sind leichtgewichtig. Die Provisionierung (B
 
 \subsection{Beispiel: Linux OS Virtualisierung}
 \subsubsection{VServer}
-Eine sehr leichtgewichtige Art der OS Virtualisierung. Es benötigt nur eine Instanz des Linux Kernel. VServer benötigt nur ein paar wenige Modifikationen im Kern und ein paar OS Userland Tools. Der Kern verwaltet alle System Ressourcen.
-
-Alle virtuellen OS Instanzen sind isoliert von einander:
+Eine sehr leichtgewichtige Art der OS Virtualisierung. Es benötigt nur eine Instanz des Linux Kernel. VServer benötigt nur ein paar wenige Modifikationen im Kern und ein paar OS Userland Tools. Der Kern verwaltet alle System Ressourcen. Alle virtuellen OS Instanzen sind isoliert von einander:
 \begin{description}
 	\item[chroot] - File System Isolation - Damit wird das Root-Directory (/) an einen anderen Ort gelegt. Das modifizierte Umfeld nennt man chroot jail.
 	\item[chcontext] - Process Isolation - Ein Linux Utilty, welches einen neuen Security Kontext erzeugt und die Kommandos darin ausführt. Jede OS Instanz verfügt über einen eigenen Prozess-Ausführungskontext.
@@ -427,13 +430,4 @@ Linux Container - Es braucht also drei wichtige Erweiterungen.
 \end{description} 
 
 \subsection{Docker}
-Wir kennen nun die Linux Container. Mit Docker geht man eine Stufe tiefer. Ein Host hat n-Base Images. Das ist das OS wie Ubuntu, Redhat. Pro Base-Image kann man VMs hinzufügen. Eine VM repräsentiert eine Applikation. Wie PHP, MySQL, Wordpress.
-
-Docker verwendet die Möglichkeit von LXC. Solche Container sind read-only und hoch portierbar. Dies ist ein Software-Layer über dem LCX. Dockt wortwörtlich an jedes Linux an.
-
-\begin{figure}[h!]
-\centering
-\includegraphics[width=\linewidth]{fig/lxc-vs-docker}
-\caption{LXC vs. Docker}
-\label{fig:lxc-vs-docker}
-\end{figure}
+Wir kennen nun die Linux Container. Mit Docker geht man eine Stufe tiefer. Ein Host hat n-Base Images. Das ist das OS wie Ubuntu, Redhat. Pro Base-Image kann man VMs hinzufügen. Eine VM repräsentiert eine Applikation. Wie PHP, MySQL, Wordpress. Docker verwendet die Möglichkeit von LXC. Solche Container sind read-only und hoch portierbar. Dies ist ein Software-Layer über dem LCX. Dockt wortwörtlich an jedes Linux an.
